@@ -609,3 +609,22 @@ section {
         height: 14px;
     }
 }
+
+/* ====== 聊天框滚动条美化 (修复不能滚动的问题) ====== */
+#chat-messages::-webkit-scrollbar {
+    width: 6px; /* 滚动条宽度 */
+}
+#chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+#chat-messages::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5); /* 灰色半透明 */
+    border-radius: 20px;
+}
+#chat-messages::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.8);
+}
+
+/* 气泡动画 */
+.chat-bubble-enter { animation: bubbleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes bubbleIn { from { opacity: 0; transform: translateY(10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }

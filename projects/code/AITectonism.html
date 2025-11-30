@@ -273,183 +273,22 @@
 
     <!-- 项目内容 -->
     <main class="pt-0">
-        <!-- 项目标题区 -->
-        
-       <!-- 项目大图区域 - WebGL2 Fluid Simulation -->
-       <div class="w-full h-[60vh] sm:h-[80vh] md:h-[100vh] mb-8 sm:mb-16 relative">
-            <!-- 鼠标左击指示 -->  
-            <div class="mouse-guide">  
-                <div class="mouse-icon">  
-                    <svg width="20" height="28" viewBox="0 0 20 28" fill="currentColor">  
-                        <!-- 鼠标外框 -->  
-                        <rect x="2" y="2" width="16" height="24" rx="8" ry="8" fill="none" stroke="currentColor" stroke-width="2"/>  
-                        <!-- 左键区域 -->  
-                        <path d="M2 10 L2 8 C2 5.2 4.2 3 7 3 L10 3 L10 14 L4 14 C2.9 14 2 13.1 2 12 L2 10 Z"   
-                            fill="currentColor" class="left-click"/>  
-                        <!-- 右键区域（未激活） -->  
-                        <path d="M10 3 L13 3 C15.8 3 18 5.2 18 8 L18 10 L18 12 C18 13.1 17.1 14 16 14 L10 14 L10 3 Z"   
-                            fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/>  
-                        <!-- 滚轮 -->  
-                        <rect x="9" y="6" width="2" height="4" rx="1" fill="currentColor" opacity="0.6"/>  
-                    </svg>  
-                </div>  
-                <div class="drag-hint">Click and Drag</div>  
-            </div> 
-            <form id="param_form">
-                <div>
-                <label for="pressure">viscosity</label>
-                <input type="range" min="0.0" max="1.0" step="0.001" value="0.50" class="slider" id="viscosity">
-                </div>
-                <div>
-                <label for="pressure">pressure</label>
-                <input type="range" min="0.0" max="1.0" step="0.001" value="0.25" class="slider" id="pressure">
-                </div>
-                <div>
-                <label for="radius">radius</label>
-                <input type="range" min="0.0" max="1.0" step="0.01" value="0.5" class="slider" id="radius">
-                </div>
-                <div>
-                <label for="velocity_dissipation">velocity dissipation</label>
-                <input type="range" min="0.0" max="1.0" step="0.001" value="0.25" class="slider" id="velocity_dissipation">
-                </div>
-                <div>
-                <label for="density_dissipation">density dissipation</label>
-                <input type="range" min="0.0" max="1.0" step="0.001" value="0.25" class="slider" id="density_dissipation">
-                </div>
-                <fieldset id="display_radio">
-                <!-- <div>
-                    <input type="radio" id="dye" name="display" value="dye" checked>
-                    <label for="dye">dye</label>
-                </div>
-            
-                <div>
-                    <input type="radio" id="velocity" name="display" value="velocity">
-                    <label for="velocity">velocity</label>
-                </div>
-            
-                <div>
-                    <input type="radio" id="display_pressure" name="display" value="pressure">
-                    <label for="display_pressure">pressure</label>
-                </div> -->
-                </fieldset>
-            </form>
-            <canvas id="fluidsim_canvas" style="background-color: rgb(0, 0, 0);" ></canvas>
-            <script src="/js/SF.min.js"></script>
-            <div class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-                <div class="text-center">
-                    <h1 class="text-white text-4xl sm:text-6xl font-light mb-8 opacity-90 drop-shadow-lg">
-                        <span class="lang-en">StableShape</span>
-                    </h1>
-                    <div class="flex justify-center space-x-2">
-                        <a href="https://github.com/Robin-Song-Design/StableShape"
-                           target="_blank"
-                           class="inline-flex items-center bg-white/20 backdrop-blur-sm border border-white/30 text-white px-5 py-4 rounded-lg hover:bg-white/30 transition-all duration-300 space-x-3 pointer-events-auto">  
-                            <i class="fab fa-github text-xl"></i>
-                        </a>
-                        <a href="/files/StableShape v0.9.zip"
-                            download="StableShape"
-                            class="inline-flex items-center bg-white/20 backdrop-blur-sm border border-white/30 text-white px-5 py-4 rounded-lg hover:bg-white/30 transition-all duration-300 space-x-3 pointer-events-auto">  
-                                <i class="fas fa-download"></i>
-                                <span class="lang-en">Download Latest Release</span>  
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
         <!-- 项目描述 -->
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-12 gap-6 sm:gap-8 md:gap-16 mb-8 sm:mb-16">
             <div class="col-span-12">
                 <div class="w-full aspect-video rounded-lg overflow-hidden shadow-lg">
-                    <iframe 
-                        src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7340807801595641858?compact=1" 
-                        class="w-full h-full"
-                        frameborder="0" 
-                        allowfullscreen="true" 
-                        title="Embedded post">
+                    <iframe src="https://www.youtube.com/embed/Sqe_InCvtm0?si=ZP7rNIcVLjjeJCU1" 
+                            title="YouTube video player" 
+                            class="w-full h-full"
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="strict-origin-when-cross-origin" 
+                            allowfullscreen>
                     </iframe>
                 </div>
             </div>
         </div>
-        
-        <!-- 项目内容 -->
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- 算法框架 -->
-            <div class="mb-12 sm:mb-16 md:mb-24">
-                <div class="max-w-4xl mx-auto mt-4 sm:mt-8 px-2 sm:px-0">
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-light mb-3 sm:mb-4">Algorithm Framework</h3>
-                        <p class="text-sm sm:text-base">The core of the StableShape algorithm includes two main components: the StableFluid class and the ParticleSystem class. The StableFluid class manages velocity and density fields, resolving the Navier-Stokes equations through methods like diffusion, advection, and pressure projection. These methods ensure the stability of fluid dynamics simulation.</p>
-                        <p class="mt-3 sm:mt-4 text-sm sm:text-base">The ParticleSystem class operates on a mesh of particles connected by springs, allowing for tension calculations and mesh reconstruction. By treating mesh vertices as particles influenced by a stable velocity field, this framework achieves realistic fluid behavior simulation.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="rounded-lg overflow-hidden shadow-lg dark:bg-gray-200">
-                <img src="https://i.imgur.com/BD0HCUV.png" alt="Algorithm Framework" class="w-full h-auto">
-            </div>
-            
-            <!-- 从场到形态 -->
-            <div class="mb-12 sm:mb-16 md:mb-24">
-                <div class="max-w-4xl mx-auto mt-4 sm:mt-8 px-2 sm:px-0">
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-light mb-3 sm:mb-4">From Field to Morphology</h3>
-                        <p class="text-sm sm:text-base">The project explores the transformation from scalar fields to morphology. In science, a field is a physical quantity, represented by a scalar, vector, or tensor, that has a value for each point in space and time. Examples of scalar fields are electric or magnetic fields, containing values for each point on a 2D plane. In the fluid case, our scalar field represents fluid density.</p>
-                        <p class="mt-3 sm:mt-4 text-sm sm:text-base">In three dimensions, the equipotential space of a scalar field is two-dimensional, that is, equipotential surfaces. We can use these equipotential surfaces to represent three-dimensional fluid, which differs from a 2D height field. Here, any equipotential surface is a three-dimensional closed body, equivalent to a contour line.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 形态生成方法 -->
-            <div class="my-8 sm:my-12 md:my-16">
-                <div>
-                    <h3 class="text-xl sm:text-2xl font-light mb-4 sm:mb-6 text-center">Morphogenesis Methods</h3>
-                </div>
-                <div class="rounded-lg overflow-hidden shadow-lg dark:bg-gray-200">
-                    <img src="https://i.imgur.com/yoPTXU9.png" alt="Morphogenesis Methods" class="w-full h-auto mx-auto">
-                </div>
-                <div class="max-w-4xl mx-auto mt-4 sm:mt-8 px-2 sm:px-0">
-                    <div>
-                        <p class="text-sm sm:text-base">StableShape offers two methods for generating morphology: the VDB method and the mesh method. The VDB method uses the Dendro plugin to convert density points to volumes. The mesh method employs the particle system to process meshes. Through these two methods, complex fluid forms can be evolved from simple primitive shapes.</p>
-                        <p class="mt-3 sm:mt-4 text-sm sm:text-base">The project utilizes the Grasshopper interface for interactive design, including components such as grid construction, VDB processing, StableFluid solver, and ParticleSystem solver. This workflow allows designers to directly manipulate and observe the evolution of forms in real-time.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 实现过程 -->
-            <div class="my-8 sm:my-12 md:my-16">
-
-                <div>
-                    <h3 class="text-xl sm:text-2xl font-light mb-4 sm:mb-6 text-center">Implementation Process</h3>
-                </div>
-                <div class="rounded-lg overflow-hidden shadow-lg dark:bg-gray-200">
-                    <img src="https://i.imgur.com/CjvJGUi.png" alt="Implementation Process" class="w-full h-auto mx-auto">
-                </div>
-                <div class="max-w-4xl mx-auto mt-4 sm:mt-8 px-2 sm:px-0">
-                    <div>
-                        <p class="text-sm sm:text-base">The implementation process of the fluid solver includes four main steps: initialization, adding density, updating the velocity field, and updating the density field. In each time step, the algorithm resolves the Navier-Stokes equations through diffusion, projection, and advection operations, ensuring physical accuracy and numerical stability of the fluid simulation.</p>
-                        <p class="mt-3 sm:mt-4 text-sm sm:text-base">The mesh solver processes the particle system, including mesh topology processing, particle movement, tension application, and mesh reconstruction. Through these steps, the system can generate fluid forms that evolve over time, providing new possibilities for architectural and design exploration.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 项目导航 - 移动端优化 -->
-            <div class="border-t border-gray-200 dark:border-gray-800 py-6 sm:py-8 mt-12 flex flex-col sm:flex-row justify-between space-y-6 sm:space-y-0">
-                
-                <a href="/projects/design/form-force.html" class="text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-magenta-400 transition-colors text-right">
-                    <div class="flex items-center">
-                        <div>
-                            <div class="text-sm text-gray-500 dark:text-gray-500">
-                                <span>Next Project</span>
-                            </div>
-                            <div>
-                                <span>Form and Force</span>
-                            </div>
-                        </div>
-                        <i class="fas fa-arrow-right ml-3"></i>
-                    </div>
-                </a>
-            </div>
-        </div>
+      
     </main>
 
 

@@ -14,6 +14,8 @@
 
     <!-- TailwindCSS 通过CDN引入 -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- marked.js 用于渲染 AI 的 Markdown 回复 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- Font Awesome 图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -135,8 +137,12 @@
                             <a href="/projects/code/BuildingGenerator.html" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-dark-300">        
                                 <span class="lang-en">Building Generator</span>  
                             </a>
+                            <a href="/projects/code/AITectonism.html" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-dark-300">        
+                                <span class="lang-en">AI Tectonism</span>  
+                            </a>
                         </div>  
                     </div>  
+                    
                     <a href="/about.html" class="px-3 py-2 hover:text-primary-500 dark:hover:text-magenta-400">  
                         <span class="lang-en">About Me</span>  
                     </a>  
@@ -209,6 +215,9 @@
                         </a>
                         <a href="/projects/code/BuildingGenerator.html" class="block px-6 py-2 hover:bg-gray-100 dark:hover:bg-dark-400">
                             <span class="lang-en">Building Generator</span>
+                        </a>
+                        <a href="/projects/code/AITectinism.html" class="block px-6 py-2 hover:bg-gray-100 dark:hover:bg-dark-400">
+                            <span class="lang-en">AI Tectonism</span>
                         </a>
                     </div>
                     
@@ -405,7 +414,7 @@
                 <!-- 项目3: Still -->
                 <div class="col-span-1 sm:col-span-4 md:col-span-4 sm:row-span-3 group relative overflow-hidden rounded-lg">
                     <a href="/projects/design/still.html" class="block h-full">
-                        <img src="/images/project/still/修改.png" alt="Still" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <img src="https://i.imgur.com/U43DSeZ.jpeg" alt="Still" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-primary-500/10 dark:from-magenta-500/10 to-primary-500/30 dark:to-magenta-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                             <div class="p-3 sm:p-4 text-white">
                                 <h3 class="text-base sm:text-lg font-light mb-1">
@@ -422,7 +431,7 @@
                 <!-- 项目4: Yokai Hall -->
                 <div class="col-span-1 sm:col-span-4 md:col-span-4 sm:row-span-3 group relative overflow-hidden rounded-lg">
                     <a href="/projects/design/yokai.html" class="block h-full">
-                        <img src="/images/project/yk/main1.png" alt="Yokai Hall" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <img src="https://i.imgur.com/lolUJqW.jpeg" alt="Yokai Hall" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-primary-500/10 dark:from-magenta-500/10 to-primary-500/30 dark:to-magenta-500/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                             <div class="p-3 sm:p-4 text-white">
                                 <h3 class="text-base sm:text-lg font-light mb-1">
@@ -466,15 +475,61 @@
             </div>
         </footer>
 
-    <!-- 返回顶部按钮 -->
-    <button id="backToTop" class="fixed bottom-8 right-8 bg-primary-500 dark:bg-magenta-600 text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary-600 dark:hover:bg-magenta-700">
-        <i class="fas fa-arrow-up"></i>
-    </button>
+    
+    <!-- ============================================== -->
+    <!-- AI Chatbot 组件 (优化版) -->
+    <!-- ============================================== -->
+    <div id="ai-chat-widget" class="fixed bottom-8 right-8 z-[100] flex flex-col items-end pointer-events-none font-sans">
+        
+        <!-- 聊天主窗口 -->
+        <div id="chat-box" class="pointer-events-auto bg-white dark:bg-dark-200 border border-gray-200 dark:border-dark-300 rounded-2xl shadow-2xl w-[360px] h-[520px] max-h-[80vh] mb-4 flex flex-col transition-all duration-300 origin-bottom-right transform scale-0 opacity-0 overflow-hidden">
+            <!-- Header -->
+            <div class="bg-primary-500 dark:bg-magenta-700 p-4 flex justify-between items-center text-white shrink-0">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    <span class="font-semibold text-sm tracking-wide">Robin's AI Assistant</span>
+                </div>
+                <button onclick="toggleChat()" class="hover:text-gray-200 transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Messages Area -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto min-h-0 p-4 space-y-4 bg-gray-50 dark:bg-dark-100 overscroll-contain">
+                <div class="flex gap-3 chat-bubble-enter">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 dark:from-magenta-500 dark:to-magenta-700 flex items-center justify-center shrink-0 text-white text-xs">AI</div>
+                    <div class="bg-white dark:bg-dark-300 border border-gray-100 dark:border-dark-400 text-gray-700 dark:text-gray-200 p-3 rounded-2xl rounded-tl-none text-sm shadow-sm max-w-[85%]">
+                        <p>Hi! I've read Robin's portfolio. Ask me anything about his <b>Computational Design</b> projects or <b>Development</b> skills!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-3 bg-white dark:bg-dark-200 border-t border-gray-100 dark:border-dark-300 shrink-0">
+                <form onsubmit="handleChat(event)" class="relative">
+                    <input type="text" id="chat-input" placeholder="Type a question..." 
+                        class="w-full bg-gray-100 dark:bg-dark-300 text-gray-800 dark:text-white rounded-full py-3 px-5 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-magenta-500 transition-all"
+                        autocomplete="off">
+                    <button type="submit" id="chat-send" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-primary-500 dark:bg-magenta-600 text-white rounded-full hover:bg-primary-600 dark:hover:bg-magenta-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fas fa-arrow-up text-xs"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 悬浮开关按钮 -->
+        <button onclick="toggleChat()" class="pointer-events-auto w-14 h-14 bg-gradient-to-r from-primary-500 to-primary-600 dark:from-magenta-600 dark:to-magenta-800 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center group relative">
+            <!-- 提示红点 -->
+            <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 border-2 border-white dark:border-dark-100 rounded-full animate-bounce"></span>
+            <i class="fas fa-robot text-xl group-hover:rotate-12 transition-transform"></i>
+        </button>
+    </div>
 
     <!-- JavaScript -->
     <script src="/js/theme.js"></script>
     <script src="/js/navigation.js"></script>
     <script src="/js/script.js"></script>
     <script src="/js/fullpage-scroll.js"></script>
+    <script src="/js/aibot.js"></script>
 </body>
 </html>

@@ -1,0 +1,78 @@
+{
+  "profile": {
+    "name": "Robin Song",
+    "title": "Computational Designer & Developer",
+    "email": "songqizhen006@gmail.com",
+    "socials": {
+      "github": "https://github.com/Robin-Song-Design",
+      "linkedin": "https://linkedin.com/in/..."
+    },
+    "intro": "专注且富有激情的全栈开发者与计算设计师。擅长将算法生成与建筑设计结合，同时也精通现代 Web 开发技术。致力于探索 AI 在设计领域的落地应用。",
+    "skills": ["JavaScript", "Python", "C#", "Grasshopper", "React", "Node.js", "Tailwind CSS", "Three.js", "Reinforcement Learning"]
+  },
+  "projects": [
+    {
+      "id": "rl-building-generator",
+      "title": "RL-Building Generator",
+      "subtitle": "Agent-based Reinforcement Learning to Increase Housing Density in London",
+      "category": "Code / R&D",
+      "tech_stack": ["Python", "Reinforcement Learning (SAC)", "Unity", "Multi-Agent Systems"],
+      "description": "针对伦敦住房危机，利用基于代理的强化学习(Agent-based RL)系统，在维持宜居标准的同时优化城市密度。",
+      "methodology": "项目结合了机器学习与城市规划原则。1. 场地数字化 (Site Digitalization)：包含土地利用分析、建筑指数和太阳能分析。2. 代理建模 (Agent Modeling)：使用多代理系统（地面代理负责水平扩展，屋顶代理负责垂直致密化）。3. RL 训练：通过 120,000 步的训练运行进行奖励优化。",
+      "outcomes": "实现了住房密度的最大化，同时改善了日照条件并保持了容积率合规性。训练时长约 1.2 小时/次。即使在复杂的非正交地块上也能生成优化的布局。",
+      "links": {
+        "github": "https://github.com/Robin-Song-Design/RL-CityDensifier",
+        "paper": "/files/AC_DigitalStudio_WrittenReport_03-27.pdf"
+      }
+    },
+    {
+      "id": "seg-predict",
+      "title": "Optimizing Urban Perception (Seg & Predict)",
+      "subtitle": "Integrating Image Segmentation and Machine Learning in London",
+      "category": "Code / R&D",
+      "tech_stack": ["Python", "PyTorch (PSPNet)", "OpenCV", "Flask", "React", "Random Forest", "XGBoost"],
+      "description": "通过计算机视觉和机器学习技术，探索伦敦街景图像与犯罪率之间的关系，并开发用于城市安全评估的预测模型。",
+      "methodology": "1. 数据收集: 采集伦敦的犯罪数据和街景图像。2. 图像分割：使用在 ADE20k 数据集上训练的 PSPNet 进行语义分割。3. 回归分析：使用 Random Forest 和 XGBoost 进行预测(R-squared ~0.45)。4. 优化：使用 SAC 强化学习改进低分区域。",
+      "outcomes": "成功关联了街景特征与犯罪率。开发了一个实时交互式平台，支持上传街景图片并实时预测安全评分。发现色彩比例和视觉特征对犯罪率有显著相关性。",
+      "links": {
+        "github": "https://github.com/Robin-Song-Design/Seg-and-Predict",
+        "demo": "http://seg.robinsong.top",
+        "paper": "/files/1.Report_Optimizing Urban Perception Integrating Image Segmentation_Wenshuo Zhang_Lewen Zhang_Robin Song.pdf"
+      }
+    },
+    {
+      "id": "stableshape",
+      "title": "StableShape",
+      "category": "Code / R&D",
+      "tech_stack": ["C#", "Grasshopper API", "CFD (Navier-Stokes)", "OpenFOAM"],
+      "description": "基于计算流体力学 (CFD) 的形态生成 Grasshopper 插件，利用流体动力学模拟指导建筑形态生成。",
+      "methodology": "核心包含 StableFluid 类（解决 Navier-Stokes 方程：扩散、平流、压力投影）和 ParticleSystem 类（处理网格拓扑、弹簧张力）。提供两种形态生成方法：VDB 方法（通过 Dendro 转换密度点）和 Mesh 方法（粒子系统）。",
+      "outcomes": "实现了从标量场到三维形态的转化。能够模拟真实的流体行为并将其冻结为建筑形态。提供了完整的 Grasshopper 电池组供设计师交互使用。",
+      "links": {
+        "github": "https://github.com/Robin-Song-Design/StableShape",
+        "download": "/files/StableShape v0.9.zip"
+      }
+    },
+    {
+      "id": "probability",
+      "title": "Probability",
+      "category": "Design",
+      "description": "使用波函数坍缩 (WFC) 算法生成的集体住宅设计。",
+      "details": "探索离散化设计方法，通过 WFC 算法将预制的模块单元组合成无限可能的居住群落。"
+    },
+    {
+      "id": "still",
+      "title": "Still",
+      "category": "Design",
+      "description": "波兰山顶的登山者避难所设计。",
+      "details": "一个极简主义的避难所，旨在应对极端气候条件，同时为登山者提供精神上的宁静。"
+    },
+    {
+      "id": "yokai-hall",
+      "title": "Yokai Hall",
+      "category": "Design",
+      "description": "传统日本妖怪文化展览馆。",
+      "details": "结合参数化设计与传统木结构，创造出光影交错的神秘空间体验。"
+    }
+  ]
+}

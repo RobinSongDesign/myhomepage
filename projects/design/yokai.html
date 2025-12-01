@@ -10,6 +10,8 @@
     
     <!-- TailwindCSS 通过CDN引入 -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- marked.js 用于渲染 AI 的 Markdown 回复 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- Font Awesome 图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -71,170 +73,9 @@
 
 </head>
 <body class="font-sans bg-gray-50 text-gray-800 dark:bg-dark-100 dark:text-gray-200 transition-colors duration-300">
-    <!-- 导航栏 -->  
-    <nav class="fixed top-0 z-50 w-full bg-white/10 backdrop-blur-sm dark:bg-dark-100/30">  
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">  
-            <div class="flex justify-between h-16">  
-                <!-- Logo & Site Name -->
-                <div class="flex items-center">
-                    <a href="/index.html" class="w-12 h-12 sm:w-16 sm:h-16 mr-2">  
-                        <img src="/images/ViewCapture20250221_005142.png" alt="Logo" class="w-12 h-12 sm:w-16 sm:h-16 logo">
-                    </a>  
-                    <a href="/index.html" class="px-2 sm:px-5 py-2 hover:text-primary-500 dark:hover:text-magenta-400 hidden sm:block">  
-                        <span class="lang-en">Robin Song</span>  
-                    </a>
-                </div>  
-                
-                <!-- Mobile menu button -->
-                <div class="flex md:hidden items-center">
-                    <button id="mobileMenuBtn" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-300">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
-                
-                <!-- Desktop Navigation - hidden on mobile -->
-                <div class="hidden md:flex items-center space-x-4">  
-                    <a href="/index.html" class="px-3 py-2 hover:text-primary-500 dark:hover:text-magenta-400">  
-                        <span class="lang-en">Home</span>  
-                    </a>  
-                    <div class="relative group">
-                        <a href="#projects" class="px-3 py-2 hover:text-primary-500 dark:hover:text-magenta-400">  
-                            <span class="lang-en">Design</span>
-                        </a>  
-                        <div class="absolute hidden group-hover:block bg-white/90 dark:bg-dark-200/90 backdrop-blur-sm shadow-md py-2 min-w-[200px] top-full left-0 rounded-lg">  
-                            <a href="/projects/design/probability.html" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-dark-300">  
-                                <span class="lang-en">Probability</span>  
-                            </a>  
-                            <a href="/projects/design/still.html" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-dark-300">        
-                                <span class="lang-en">Still</span>  
-                            </a>  
-                            <a href="/projects/design/yokai.html" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-dark-300">  
-                                <span class="lang-en">Yokai Hall</span>  
-                            </a>  
-                        </div>  
-                    </div>
-                    <div class="relative group">
-                        <a href="#" class="px-3 py-2 hover:text-primary-500 dark:hover:text-magenta-400">  
-                            <span class="lang-en">Code</span>  
-                        </a>  
-                        <div class="absolute hidden group-hover:block bg-white/90 dark:bg-dark-200/90 backdrop-blur-sm shadow-md py-2 min-w-[200px] top-full left-0 rounded-lg">  
-                            <a href="/projects/code/StableShape.html" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-dark-300">  
-                                <span class="lang-en">StableShape</span>  
-                            </a>  
-                            <a href="/projects/code/Seg.html" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-dark-300">  
-                                <span class="lang-en">Seg & Predict</span>  
-                            </a>  
-                            <a href="/projects/code/BuildingGenerator.html" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-dark-300">        
-                                <span class="lang-en">Building Generator</span>  
-                            </a>
-                        </div>  
-                    </div>  
-                    <a href="/about.html" class="px-3 py-2 hover:text-primary-500 dark:hover:text-magenta-400">  
-                        <span class="lang-en">About Me</span>  
-                    </a>  
-                    <div class="flex space-x-2 ml-1">
-                        <a href="https://www.linkedin.com/in/qizhen-song-b30993341/" target="_blank" class="text-gray-600 hover:text-primary-500 dark:text-gray-400 dark:hover:text-magenta-400 transition-colors duration-200">  
-                            <i class="fab fa-linkedin text-xl"></i>  
-                        </a>  
-                        <a href="https://github.com/Robin-Song-Design" target="_blank" class="text-gray-600 hover:text-primary-500 dark:text-gray-400 dark:hover:text-magenta-400 transition-colors duration-200">  
-                            <i class="fab fa-github text-xl"></i>  
-                        </a>
-                        <a href="javascript:void(0)" class="text-gray-600 hover:text-primary-500 dark:text-gray-400 dark:hover:text-magenta-400 transition-colors duration-200" id="wechatIcon">  
-                            <i class="fab fa-weixin text-xl"></i>  
-                        </a>
-                    </div> 
-                    <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-300 transition-colors duration-200">  
-                        <i class="fas fa-sun text-gray-600 dark:text-gray-300 dark:hidden"></i>  
-                        <i class="fas fa-moon text-gray-300 hidden dark:block"></i>  
-                    </button>  
-                </div>  
-            </div>
-            
-            <!-- Mobile menu - hidden by default -->
-            <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-dark-200 mt-2 rounded-lg shadow-lg overflow-hidden">
-                <div class="py-2">
-                    <a href="/index.html" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-dark-300">
-                        <span class="lang-en">Home</span>
-                    </a>
-                    
-                    <!-- Mobile Design dropdown -->
-                    <div id="mobileDesignDropdown" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-dark-300">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="lang-en">Design</span>
-                            </div>
-                            <i class="fas fa-chevron-down text-sm"></i>
-                        </div>
-                    </div>
-                    
-                    <!-- Mobile Design menu items -->
-                    <div id="mobileDesignMenu" class="hidden bg-gray-50 dark:bg-dark-300">
-                        <a href="/projects/design/probability.html" class="block px-6 py-2 hover:bg-gray-100 dark:hover:bg-dark-400">
-                            <span class="lang-en">Probability</span>
-                        </a>
-                        <a href="/projects/design/still.html" class="block px-6 py-2 hover:bg-gray-100 dark:hover:bg-dark-400">
-                            <span class="lang-en">Still</span>
-                        </a>
-                        <a href="/projects/design/yokai.html" class="block px-6 py-2 hover:bg-gray-100 dark:hover:bg-dark-400">
-                            <span class="lang-en">Yokai Hall</span>
-                        </a>
-                    </div>
-                    
-                    <!-- Mobile Code dropdown -->
-                    <div id="mobileCodeDropdown" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-dark-300">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="lang-en">Code</span>
-                            </div>
-                            <i class="fas fa-chevron-down text-sm"></i>
-                        </div>
-                    </div>
-                    
-                    <!-- Mobile Code menu items -->
-                    <div id="mobileCodeMenu" class="hidden bg-gray-50 dark:bg-dark-300">
-                        <a href="/projects/code/StableShape.html" class="block px-6 py-2 hover:bg-gray-100 dark:hover:bg-dark-400">
-                            <span class="lang-en">StableShape</span>
-                        </a>
-                        <a href="/projects/code/Seg.html" class="block px-6 py-2 hover:bg-gray-100 dark:hover:bg-dark-400">
-                            <span class="lang-en">Seg & Predict</span>
-                        </a>
-                        <a href="/projects/code/BuildingGenerator.html" class="block px-6 py-2 hover:bg-gray-100 dark:hover:bg-dark-400">
-                            <span class="lang-en">Building Generator</span>
-                        </a>
-                    </div>
-                    
-                    <a href="/about.html" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-dark-300">
-                        <span class="lang-en">About Me</span>
-                    </a>
-                    
-                    <div class="border-t border-gray-100 dark:border-dark-400 my-2"></div>
-                    
-                    <!-- Social links in mobile menu -->
-                    <div class="flex justify-center space-x-6 py-2">
-                        <a href="https://www.linkedin.com/in/qizhen-song-b30993341/" target="_blank" class="text-gray-600 hover:text-primary-500 dark:text-gray-400 dark:hover:text-magenta-400">
-                            <i class="fab fa-linkedin text-xl"></i>
-                        </a>
-                        <a href="https://github.com/Robin-Song-Design" target="_blank" class="text-gray-600 hover:text-primary-500 dark:text-gray-400 dark:hover:text-magenta-400">
-                            <i class="fab fa-github text-xl"></i>
-                        </a>
-                        <a href="javascript:void(0)" id="mobileWechatIcon" class="text-gray-600 hover:text-primary-500 dark:text-gray-400 dark:hover:text-magenta-400">
-                            <i class="fab fa-weixin text-xl"></i>
-                        </a>
-                    </div>
-                    
-                    <div class="border-t border-gray-100 dark:border-dark-400 my-2"></div>
-                    
-                    <!-- Language & Theme toggles in mobile menu -->
-                    <div class="flex px-4 py-2 justify-around">
-                        <button id="mobileThemeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-300">
-                            <i class="fas fa-sun dark:hidden"></i>
-                            <i class="fas fa-moon hidden dark:block"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>  
-    </nav>
+    
+    <!-- 导航栏 -->
+    <div id="header-placeholder"></div>
 
 
     <!-- 项目内容 -->
@@ -423,44 +264,33 @@
     </div>
 
 
-    <!-- 页脚 -->
-    <footer class="bg-white dark:bg-dark-200 shadow-inner mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <div class="lang-zh lang-content active">
-                        <p class="text-xl dark:text-gray-400">© 2025 个人作品集. 保留所有权利.</p>
-                    </div>
-                    <div class="lang-en lang-content">
-                        <p class="text-gray-600 dark:text-gray-400">© 2025 Personal Portfolio. All rights reserved.</p>
-                    </div>
-                </div>
-                
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-600 hover:text-primary-500 dark:text-gray-400 dark:hover:text-magenta-400 transition-colors duration-200">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="#" class="text-gray-600 hover:text-primary-500 dark:text-gray-400 dark:hover:text-magenta-400 transition-colors duration-200">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="javascript:void(0)" class="text-gray-600 hover:text-primary-500 dark:text-gray-400 dark:hover:text-magenta-400 transition-colors duration-200" id="wechatIcon">  
-                        <i class="fab fa-weixin"></i>  
-                    </a>  
-                </div>
-            </div>
-        </div>
-    </footer>
+    <!-- bot -->
+    <div id="chatbot-placeholder"></div>
+    
+    <!-- 页脚 -->  
+    <div id="footer-placeholder"></div>
 
-    <!-- 返回顶部按钮 -->
-    <button id="backToTop" class="fixed bottom-8 right-8 bg-primary-500 dark:bg-magenta-500 text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary-600 dark:hover:bg-magenta-700">
-        <i class="fas fa-arrow-up"></i>
-    </button>
 
     <!-- JavaScript -->
     <script src="/js/theme.js"></script>
-    <script src="/js/language.js" defer></script>
     <script src="/js/navigation.js"></script>
     <script src="/js/script.js"></script>
-    <script src="/js/tilt.js"></script>  
+    <script src="/js/aibot.js"></script>
+    <script src="/js/loader.js"></script>
+
+    <script>
+        // 页面加载时，动态加载组件
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // 加载导航栏，并在加载完成后高亮当前页
+            loadComponent('header-placeholder', '/components/header.html', window.initHeaderLogic);
+            
+            // 加载页脚
+            loadComponent('footer-placeholder', '/components/footer.html');
+
+            // 加载机器人，并初始化逻辑
+            loadComponent('chatbot-placeholder', '/components/chatbot.html', window.initChatbot);
+        });
+    </script>
 </body>
 </html>

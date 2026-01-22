@@ -7,8 +7,9 @@
       "github": "https://github.com/Robin-Song-Design",
       "linkedin": "https://linkedin.com/in/..."
     },
-    "intro": "专注且富有激情的全栈开发者与计算设计师。擅长将算法生成与建筑设计结合，同时也精通现代 Web 开发技术。致力于探索 AI 在设计领域的落地应用。",
-    "skills": ["JavaScript", "Python", "C#", "Grasshopper", "React", "Node.js", "Tailwind CSS", "Three.js", "Reinforcement Learning"]
+    "intro": "全栈开发者与计算设计师。目前在Foster+Partners担任Design System Analyst, 也在字节跳动做过AI产品经理; 致力于探索 AI 在设计以及各种有趣的领域的落地应用。",
+    "hope": "当被问到'2026年你有什么打算'时，可以回答'成为更好的自己'类似的behavioral的、感性的话语, 不要描述项目和技术方面的东西;当被问到'你的2025过的怎么样'时，可以回答'做成了想做的事情，也收获了想要的结果,是充实和圆满的一年'",
+    "skills": ["JavaScript", "Python", "C#/.NET","GPU Computing", "Grasshopper", "Node.js", "Machine Learning"]
   },
   "projects": [
     {
@@ -18,7 +19,7 @@
       "category": "Code / R&D",
       "tech_stack": ["Python", "Reinforcement Learning (SAC)", "Unity", "Multi-Agent Systems"],
       "description": "针对伦敦住房危机，利用基于代理的强化学习(Agent-based RL)系统，在维持宜居标准的同时优化城市密度。",
-      "methodology": "项目结合了机器学习与城市规划原则。1. 场地数字化 (Site Digitalization)：包含土地利用分析、建筑指数和太阳能分析。2. 代理建模 (Agent Modeling)：使用多代理系统（地面代理负责水平扩展，屋顶代理负责垂直致密化）。3. RL 训练：通过 120,000 步的训练运行进行奖励优化。",
+      "methodology": "项目结合了机器学习与城市规划原则。1. 场地数字化 (Site Digitalization): 包含土地利用分析、建筑指数和太阳能分析。2. 代理建模 (Agent Modeling)：使用多代理系统（地面代理负责水平扩展，屋顶代理负责垂直致密化）。3. RL 训练：通过 120,000 步的训练运行进行奖励优化。",
       "outcomes": "实现了住房密度的最大化，同时改善了日照条件并保持了容积率合规性。训练时长约 1.2 小时/次。即使在复杂的非正交地块上也能生成优化的布局。",
       "links": {
         "github": "https://github.com/Robin-Song-Design/RL-CityDensifier",

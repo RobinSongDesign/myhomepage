@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title src = "/images/logo.svg">Still | Robin Song</title>
+    <title src="/images/logo.svg">Still | Robin Song</title>
 
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/svg+xml" href="/images/logo.svg">
-    
+
     <!-- TailwindCSS 通过CDN引入 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- marked.js 用于渲染 AI 的 Markdown 回复 -->
@@ -73,23 +74,23 @@
     </script>
 
 </head>
+
 <body class="font-sans bg-gray-50 text-gray-800 dark:bg-dark-100 dark:text-gray-200 transition-colors duration-300">
-    
+
     <!-- 导航栏 -->
     <div id="header-placeholder"></div>
 
-   <!-- 项目内容 -->  
-    <main class="pt-0">  
+    <!-- 项目内容 -->
+    <main class="pt-0">
         <!-- 项目标题区 - 主横幅图片 -->
         <div class="w-full h-screen relative overflow-hidden">
             <!-- 主背景图片 -->
             <div class="absolute inset-0">
-                <img src="https://i.imgur.com/U43DSeZ.jpeg" 
-                    alt="Probability Community" 
-                    class="w-full h-full object-cover">  
+                <img src="https://pic1.imgdb.cn/item/6971603d1404c8e205f11a1f.None" alt="Probability Community"
+                    class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-r from-red-900/20 via-orange-900/20 to-white-900/30"></div>
             </div>
-            
+
             <!-- 项目标题居中 -->
             <div class="absolute inset-0 flex items-center justify-center z-10">
                 <div class="text-center text-white">
@@ -102,96 +103,133 @@
                 </div>
             </div>
         </div>
-        
-        <!-- 项目描述 - 增加小屏幕间距 -->  
-        <div class="pt-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-12 gap-6 sm:gap-8 md:gap-16 mb-8 sm:mb-16">  
-            <div class="col-span-12 md:col-span-4">  
-                <div class="lang-en">  
-                    <h2 class="text-xl sm:text-2xl font-light mb-3 sm:mb-4">Project Overview</h2>  
-                </div>  
-            </div>  
-            <div class="col-span-12 md:col-span-8">   
-                <div class="lang-en">  
-                    <p class="mb-4 text-sm sm:text-base">Exploring the application of sustainable materials and architectural structures, designing a shelter for climbers in the Jowada Mountains of Poland. The project utilized locally sourced cedar wood and green concrete, easy to construct and dismantle, emphasizing natural, functional, and psychological sustainability.</p>  
-                    <p class="text-sm sm:text-base">The project is located on the top of the Jezowa Woda mountain, serving as a rest and leisure spot for mountaineers, as well as a viewing terrace for sightseeing. By considering the needs of climbers, the project determines the area required for each functional area of the building. Through transformations in form, the final architectural shape was obtained.</p>  
-                </div>  
-            </div>  
-        </div>  
-        
-        <!-- 项目内容 -->  
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">  
-            <!-- 图片集 - 位置分析 -->  
-            <div class="mb-12 sm:mb-16 md:mb-24">  
-                <div class="grid grid-cols-12 gap-4 sm:gap-6 md:gap-8">  
-                    <div class="col-span-12 md:col-span-6 rounded-lg overflow-hidden shadow-lg mb-4 md:mb-0">  
-                        <img src="https://i.imgur.com/CCVtXzd.jpeg" alt="Location Analysis" class="w-full h-auto">  
-                    </div>  
-                    <div class="col-span-12 md:col-span-6">   
-                        <div class="lang-en">
-                            <h3 class="text-lg sm:text-xl font-light mb-3 sm:mb-4">Location and Layout</h3>  
-                            <p class="text-sm sm:text-base">The project is located on the top of Jezowa Woda mountain, where the elevation provides an excellent viewing position. The building is divided into two main parts: the main part and the spring part. The main part contains the restaurant, viewing terrace, and accommodation areas, while the spring part provides spaces for rest and relaxation.</p>  
-                            <p class="mt-3 sm:mt-4 text-sm sm:text-base">By considering the specific needs of climbers, the size and location of each functional area have been carefully arranged to provide the optimal user experience, while considering the special nature of the mountaintop environment and sustainable use of resources.</p>  
-                        </div>  
-                    </div>  
-                </div>  
-            </div>  
-            
-            <!-- 图片集 - 空间配置 -->  
-            <div class="mb-12 sm:mb-16 md:mb-24">  
-                <div class="grid grid-cols-12 gap-4 sm:gap-6 md:gap-8">  
-                    <div class="col-span-12 md:col-span-6 md:order-2 rounded-lg overflow-hidden shadow-lg mb-4 md:mb-0">  
-                        <img src="https://i.imgur.com/3TF0Cdg.jpeg" alt="Spatial Configuration" class="w-full h-auto">  
-                    </div>  
-                    <div class="col-span-12 md:col-span-6 md:order-1">  
-                        <div class="lang-en">  
-                            <h3 class="text-lg sm:text-xl font-light mb-3 sm:mb-4">Spatial Configuration</h3>  
-                            <p class="text-sm sm:text-base">The shelter design includes various functional spaces: rest area, bathroom, bathing facilities, locker room, restaurant and viewing terrace, lobby, etc. The spatial layout considers the climbers' behavioral paths and activity needs, forming a smooth spatial experience from entering the lobby to resting, dining, and viewing.</p>  
-                            <p class="mt-3 sm:mt-4 text-sm sm:text-base">Through the transformation of form, the building ultimately forms an appearance and internal spatial layout that echoes the mountain environment, providing a practical and comfortable shelter environment.</p>  
-                        </div>  
-                    </div>  
-                </div>  
-            </div>  
 
-            <!-- 额外图片展示 -->  
-            <div class="mt-8 sm:mt-12 mb-8 sm:mb-12 md:mb-24 py-4 sm:py-8">  
-                <div class="rounded-lg overflow-hidden shadow-lg dark:bg-gray-200">  
-                    <img src="https://i.imgur.com/npDK7C3.jpeg" alt="Ex Details" class="w-full max-w-5xl h-auto mx-auto">  
-                </div>  
+        <!-- 项目描述 - 增加小屏幕间距 -->
+        <div
+            class="pt-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-12 gap-6 sm:gap-8 md:gap-16 mb-8 sm:mb-16">
+            <div class="col-span-12 md:col-span-4">
+                <div class="lang-en">
+                    <h2 class="text-xl sm:text-2xl font-light mb-3 sm:mb-4">Project Overview</h2>
+                </div>
             </div>
-            
-            <!-- 结构细节展示 -->  
-            <div class="mt-8 sm:mt-12 mb-8 sm:mb-12 md:mb-24 py-4 sm:py-8">   
-                <div class="lang-en">  
-                    <h3 class="text-xl sm:text-2xl font-light mb-4 sm:mb-6 text-center">Structural Details</h3>  
-                </div>  
-                <div class="rounded-lg overflow-hidden shadow-lg dark:bg-gray-200">  
-                    <img src="https://i.imgur.com/kjFRwll.jpeg" alt="Structural Details" class="w-full max-w-5xl h-auto mx-auto">  
-                </div>  
-                <div class="max-w-4xl mx-auto mt-4 sm:mt-8 px-2 sm:px-0">  
-                    <div class="lang-en">  
-                        <p class="text-sm sm:text-base">The project employs various wood structural connection techniques, including dovetail joints for staircase pillar structures, roof purlin overlap structures, secondary roof purlin overlap structures, and more. The ground diagonal brace and concrete metal linkage structures, column and concrete metal connection structures, and normal beam-column overlap structures are all carefully designed to ensure structural stability and durability.</p>  
-                    </div>  
-                </div>  
-            </div>  
-            
-            <!-- 材料展示 -->  
-            <div class="mt-8 sm:mt-12 mb-8 sm:mb-12 md:mb-24 py-4 sm:py-8">   
-                <div class="lang-en">  
-                    <h3 class="text-xl sm:text-2xl font-light mb-4 sm:mb-6 text-center">Material Application</h3>  
-                </div>  
-                <div class="rounded-lg overflow-hidden shadow-lg dark:bg-gray-200">  
-                    <img src="https://i.imgur.com/shsV3Pc.jpeg" alt="Material Application" class="w-full max-w-5xl h-auto mx-auto">  
-                </div>  
-                <div class="max-w-4xl mx-auto mt-4 sm:mt-8 px-2 sm:px-0">  
-                    <div class="lang-en">  
-                        <p class="text-sm sm:text-base">The main materials used in the project include: 20mm thick veneer lumber, 20mm thick plasticized glass, 30mm thick fir wood planks, thermal insulation material, 120mm side length fir columns, 120×240mm fir secondary beams, 20mm thick veneer lumber, C15 360 steel-concrete beams and columns, etc. The wood used is birch wood planks, the concrete parts use PVC panels coated with mixed mature lime acrylic, and the glass parts use transparent acrylic panels.</p>  
-                    </div>  
-                </div>  
-            </div>  
-                
+            <div class="col-span-12 md:col-span-8">
+                <div class="lang-en">
+                    <p class="mb-4 text-sm sm:text-base">Exploring the application of sustainable materials and
+                        architectural structures, designing a shelter for climbers in the Jowada Mountains of Poland.
+                        The project utilized locally sourced cedar wood and green concrete, easy to construct and
+                        dismantle, emphasizing natural, functional, and psychological sustainability.</p>
+                    <p class="text-sm sm:text-base">The project is located on the top of the Jezowa Woda mountain,
+                        serving as a rest and leisure spot for mountaineers, as well as a viewing terrace for
+                        sightseeing. By considering the needs of climbers, the project determines the area required for
+                        each functional area of the building. Through transformations in form, the final architectural
+                        shape was obtained.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目内容 -->
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- 图片集 - 位置分析 -->
+            <div class="mb-12 sm:mb-16 md:mb-24">
+                <div class="grid grid-cols-12 gap-4 sm:gap-6 md:gap-8">
+                    <div class="col-span-12 md:col-span-6 rounded-lg overflow-hidden shadow-lg mb-4 md:mb-0">
+                        <img src="https://pic1.imgdb.cn/item/697160a61404c8e205f11a31.None" alt="Location Analysis"
+                            class="w-full h-auto">
+                    </div>
+                    <div class="col-span-12 md:col-span-6">
+                        <div class="lang-en">
+                            <h3 class="text-lg sm:text-xl font-light mb-3 sm:mb-4">Location and Layout</h3>
+                            <p class="text-sm sm:text-base">The project is located on the top of Jezowa Woda mountain,
+                                where the elevation provides an excellent viewing position. The building is divided into
+                                two main parts: the main part and the spring part. The main part contains the
+                                restaurant, viewing terrace, and accommodation areas, while the spring part provides
+                                spaces for rest and relaxation.</p>
+                            <p class="mt-3 sm:mt-4 text-sm sm:text-base">By considering the specific needs of climbers,
+                                the size and location of each functional area have been carefully arranged to provide
+                                the optimal user experience, while considering the special nature of the mountaintop
+                                environment and sustainable use of resources.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 图片集 - 空间配置 -->
+            <div class="mb-12 sm:mb-16 md:mb-24">
+                <div class="grid grid-cols-12 gap-4 sm:gap-6 md:gap-8">
+                    <div class="col-span-12 md:col-span-6 md:order-2 rounded-lg overflow-hidden shadow-lg mb-4 md:mb-0">
+                        <img src="https://pic1.imgdb.cn/item/697160081404c8e205f11a1a.None" alt="Spatial Configuration"
+                            class="w-full h-auto">
+                    </div>
+                    <div class="col-span-12 md:col-span-6 md:order-1">
+                        <div class="lang-en">
+                            <h3 class="text-lg sm:text-xl font-light mb-3 sm:mb-4">Spatial Configuration</h3>
+                            <p class="text-sm sm:text-base">The shelter design includes various functional spaces: rest
+                                area, bathroom, bathing facilities, locker room, restaurant and viewing terrace, lobby,
+                                etc. The spatial layout considers the climbers' behavioral paths and activity needs,
+                                forming a smooth spatial experience from entering the lobby to resting, dining, and
+                                viewing.</p>
+                            <p class="mt-3 sm:mt-4 text-sm sm:text-base">Through the transformation of form, the
+                                building ultimately forms an appearance and internal spatial layout that echoes the
+                                mountain environment, providing a practical and comfortable shelter environment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 额外图片展示 -->
+            <div class="mt-8 sm:mt-12 mb-8 sm:mb-12 md:mb-24 py-4 sm:py-8">
+                <div class="rounded-lg overflow-hidden shadow-lg dark:bg-gray-200">
+                    <img src="https://pic1.imgdb.cn/item/697160d71404c8e205f11a4c.None" alt="Ex Details"
+                        class="w-full max-w-5xl h-auto mx-auto">
+                </div>
+            </div>
+
+            <!-- 结构细节展示 -->
+            <div class="mt-8 sm:mt-12 mb-8 sm:mb-12 md:mb-24 py-4 sm:py-8">
+                <div class="lang-en">
+                    <h3 class="text-xl sm:text-2xl font-light mb-4 sm:mb-6 text-center">Structural Details</h3>
+                </div>
+                <div class="rounded-lg overflow-hidden shadow-lg dark:bg-gray-200">
+                    <img src="https://pic1.imgdb.cn/item/697160cc1404c8e205f11a47.None" alt="Structural Details"
+                        class="w-full max-w-5xl h-auto mx-auto">
+                </div>
+                <div class="max-w-4xl mx-auto mt-4 sm:mt-8 px-2 sm:px-0">
+                    <div class="lang-en">
+                        <p class="text-sm sm:text-base">The project employs various wood structural connection
+                            techniques, including dovetail joints for staircase pillar structures, roof purlin overlap
+                            structures, secondary roof purlin overlap structures, and more. The ground diagonal brace
+                            and concrete metal linkage structures, column and concrete metal connection structures, and
+                            normal beam-column overlap structures are all carefully designed to ensure structural
+                            stability and durability.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 材料展示 -->
+            <div class="mt-8 sm:mt-12 mb-8 sm:mb-12 md:mb-24 py-4 sm:py-8">
+                <div class="lang-en">
+                    <h3 class="text-xl sm:text-2xl font-light mb-4 sm:mb-6 text-center">Material Application</h3>
+                </div>
+                <div class="rounded-lg overflow-hidden shadow-lg dark:bg-gray-200">
+                    <img src="https://pic1.imgdb.cn/item/6971610c1404c8e205f11a59.None" alt="Material Application"
+                        class="w-full max-w-5xl h-auto mx-auto">
+                </div>
+                <div class="max-w-4xl mx-auto mt-4 sm:mt-8 px-2 sm:px-0">
+                    <div class="lang-en">
+                        <p class="text-sm sm:text-base">The main materials used in the project include: 20mm thick
+                            veneer lumber, 20mm thick plasticized glass, 30mm thick fir wood planks, thermal insulation
+                            material, 120mm side length fir columns, 120×240mm fir secondary beams, 20mm thick veneer
+                            lumber, C15 360 steel-concrete beams and columns, etc. The wood used is birch wood planks,
+                            the concrete parts use PVC panels coated with mixed mature lime acrylic, and the glass parts
+                            use transparent acrylic panels.</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- 项目导航 -->
             <div class="border-t border-gray-200 dark:border-gray-800 py-8 flex justify-between">
-                <a href="/projects/design/probability.html" class="text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-magenta-400 transition-colors">
+                <a href="/projects/design/probability.html"
+                    class="text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-magenta-400 transition-colors">
                     <div class="flex items-center">
                         <i class="fas fa-arrow-left mr-3"></i>
                         <div>
@@ -204,8 +242,9 @@
                         </div>
                     </div>
                 </a>
-                
-                <a href="/projects/design/yokai.html" class="text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-magenta-400 transition-colors text-right">
+
+                <a href="/projects/design/yokai.html"
+                    class="text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-magenta-400 transition-colors text-right">
                     <div class="flex items-center">
                         <div>
                             <div class="text-sm text-gray-500 dark:text-gray-500">
@@ -225,12 +264,14 @@
 
     <!-- 微信二维码弹窗 -->
     <div id="wechatModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white dark:bg-dark-200 rounded-lg shadow-xl p-6 max-w-sm mx-auto text-center transform transition-all">
-            
+        <div
+            class="bg-white dark:bg-dark-200 rounded-lg shadow-xl p-6 max-w-sm mx-auto text-center transform transition-all">
+
             <div class="mb-4">
                 <img src="/images/weixin.jpg" alt="WeChat QR Code" class="w-48 h-64 mx-auto">
             </div>
-            <button id="closeModal" class="px-4 py-2 bg-primary-500 dark:bg-magenta-500 text-white rounded hover:bg-primary-600 dark:hover:bg-magenta-600 transition-colors">
+            <button id="closeModal"
+                class="px-4 py-2 bg-primary-500 dark:bg-magenta-500 text-white rounded hover:bg-primary-600 dark:hover:bg-magenta-600 transition-colors">
                 <span class="lang-en">Close</span>
             </button>
         </div>
@@ -239,8 +280,8 @@
 
     <!-- bot -->
     <div id="chatbot-placeholder"></div>
-    
-    <!-- 页脚 -->  
+
+    <!-- 页脚 -->
     <div id="footer-placeholder"></div>
 
 
@@ -253,11 +294,11 @@
 
     <script>
         // 页面加载时，动态加载组件
-        document.addEventListener("DOMContentLoaded", function() {
-            
+        document.addEventListener("DOMContentLoaded", function () {
+
             // 加载导航栏，并在加载完成后高亮当前页
             loadComponent('header-placeholder', '/components/header.html', window.initHeaderLogic);
-            
+
             // 加载页脚
             loadComponent('footer-placeholder', '/components/footer.html');
 
@@ -266,4 +307,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -3,8 +3,11 @@
 <!-- ============================================== -->
 <div id="ai-chat-widget" class="fixed bottom-8 right-8 z-[100] flex flex-col items-end pointer-events-none font-sans">
     
-    <!-- 聊天主窗口 -->
-    <div id="chat-box" class="pointer-events-auto bg-white dark:bg-dark-200 border border-gray-200 dark:border-dark-300 rounded-2xl shadow-2xl w-[360px] h-[520px] max-h-[80vh] mb-4 flex flex-col transition-all duration-300 origin-bottom-right transform scale-0 opacity-0 overflow-hidden">
+   <!-- 聊天主窗口 -->
+    <div id="chat-box" 
+         style="width: 480px; height: 520px;"
+         class="pointer-events-auto bg-white dark:bg-dark-200 border border-gray-200 dark:border-dark-300 rounded-2xl shadow-2xl max-h-[80vh] max-w-[90vw] mb-4 flex flex-col transition-all duration-300 origin-bottom-right transform scale-0 opacity-0 overflow-hidden relative">
+
         <!-- Header -->
         <div class="bg-primary-500 dark:bg-magenta-700 p-4 flex justify-between items-center text-white shrink-0">
             <div class="flex items-center gap-2">

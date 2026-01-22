@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title src = "/images/logo.svg">Home | Robin Song</title>
+    <title src="/images/logo.svg">Home | Robin Song</title>
 
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/svg+xml" href="/images/logo.svg">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>  
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script>
 
     <!-- TailwindCSS 通过CDN引入 -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -77,51 +78,58 @@
             }
         }
     </script>
-    
-</head>  
-<body class="font-sans bg-gray-50 text-gray-800 dark:bg-dark-100 dark:text-gray-200 transition-colors duration-300">  
+
+</head>
+
+<body class="font-sans bg-gray-50 text-gray-800 dark:bg-dark-100 dark:text-gray-200 transition-colors duration-300">
 
     <!-- 1. 导航栏占位符 -->
     <div id="header-placeholder"></div>
 
-     <!-- 主要内容 -->  
-     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">  
+    <!-- 主要内容 -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- 个人介绍部分 - 移动端优化版 -->
         <section id="intro" class="w-full py-40 relative">
             <!-- 背景大Logo - 仅在移动端显示 -->
             <div class="absolute inset-0 flex items-center justify-center opacity-10 scale-140 md:hidden">
                 <img src="/images/logo.svg" class="w-full h-full object-contain logo" alt="Background Logo">
             </div>
-            
+
             <!-- 个人信息卡片 - 毛玻璃效果 -->
             <div class="pt-16 mx-auto relative z-10 max-w-md flex flex-col items-center">
                 <!-- 移动端直接显示个人信息卡片 -->
-                <div class="md:hidden rounded-2xl bg-white/20 dark:bg-dark-200/30 backdrop-blur-sm shadow-xl overflow-hidden p-8 border border-white/20">
+                <div
+                    class="md:hidden rounded-2xl bg-white/20 dark:bg-dark-200/30 backdrop-blur-sm shadow-xl overflow-hidden p-8 border border-white/20">
                     <div class="text-center">View Better on Desktop</div>
                     <div class="flex flex-col items-center text-center">
                         <!-- 个人Logo -->
                         <div class="mb-6">
-                            <img src="/images/logo.svg" class="w-24 h-24 transition-transform logo" alt="Robin Song's Logo">
+                            <img src="/images/logo.svg" class="w-24 h-24 transition-transform logo"
+                                alt="Robin Song's Logo">
                         </div>
                         <!-- 个人信息 -->
                         <div class="lang-en">
-                            <h1 class="text-2xl font-bold mb-3 text-dark-600 dark:text-white">I'm <span class="text-primary-500 dark:text-magenta-400">Robin Song</span></h1>
-                            <p class="text-dark-600/90 font-medium dark:text-gray-200 mb-6">Computational Designer & Developer</p>
+                            <h1 class="text-2xl font-bold mb-3 text-dark-600 dark:text-white">I'm <span
+                                    class="text-primary-500 dark:text-magenta-400">Robin Song</span></h1>
+                            <p class="text-dark-600/90 font-medium dark:text-gray-200 mb-6">Computational Designer &
+                                Developer</p>
                         </div>
                         <!-- 按钮组 -->
                         <div class="flex flex-wrap gap-3">
-                            <a href="/files/CV_Song Qizhen.pdf" download="CV_Robin_Song" class="inline-flex items-center justify-center px-5 py-2 bg-white/70 hover:bg-white/90 dark:bg-dark-300/50 dark:hover:bg-dark-400/60 text-black dark:text-gray-200 backdrop-blur-sm font-medium rounded-full transition-all duration-200">
+                            <a href="/files/CV_Song Qizhen.pdf" download="CV_Robin_Song"
+                                class="inline-flex items-center justify-center px-5 py-2 bg-white/70 hover:bg-white/90 dark:bg-dark-300/50 dark:hover:bg-dark-400/60 text-black dark:text-gray-200 backdrop-blur-sm font-medium rounded-full transition-all duration-200">
                                 <i class="fas fa-download mr-2"></i>
                                 <span class="lang-en">Download Resume</span>
                             </a>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- 桌面端保留翻转卡片 -->
                 <div class="flip-card-container mx-auto relative hidden md:block" style="width: 360px; height: 360px;">
                     <!-- 轨道Logo容器，绝对定位，尺寸与卡片一致 -->
-                    <div class="logo-orbit-container absolute inset-0 items-center justify-center pointer-events-none flex">
+                    <div
+                        class="logo-orbit-container absolute inset-0 items-center justify-center pointer-events-none flex">
                         <img src="/images/rhinoceros.svg" class="logo-orbit logo-1 logo" alt="Logo">
                         <img src="/images/csharp.svg" class="logo-orbit logo-2" alt="Logo">
                         <img src="/images/unity.svg" class="logo-orbit logo-3 logo" alt="Logo">
@@ -129,19 +137,26 @@
                     </div>
                     <div class="flip-card">
                         <!-- 卡片正面 - SVG图标 -->
-                        <div class="flip-card-front rounded-full flex items-center justify-center bg-gradient-to-t from-primary-100/20 dark:from-magenta-300/10 backdrop-blur-sm shadow-md">
-                            <img src="/images/logo.svg" class="w-2/3 h-2/3 transition-transform duration-500 logo" alt="Robin Song's Logo">
+                        <div
+                            class="flip-card-front rounded-full flex items-center justify-center bg-gradient-to-t from-primary-100/20 dark:from-magenta-300/10 backdrop-blur-sm shadow-md">
+                            <img src="/images/logo.svg" class="w-2/3 h-2/3 transition-transform duration-500 logo"
+                                alt="Robin Song's Logo">
                         </div>
                         <!-- 卡片背面 - 个人信息 -->
-                        <div class="flip-card-back rounded-full bg-gray-100 dark:bg-dark-200/30 backdrop-blur-sm shadow-md overflow-hidden">
+                        <div
+                            class="flip-card-back rounded-full bg-gray-100 dark:bg-dark-200/30 backdrop-blur-sm shadow-md overflow-hidden">
                             <div class="flex flex-col items-center text-center">
                                 <div class="flex-1">
                                     <div class="lang-en">
-                                        <h1 class="text-3xl sm:text-4xl font-bold mb-4 text-dark-600 dark:text-white">I'm <span class="text-primary-500 dark:text-magenta-400">Robin Song</span></h1>
-                                        <p class="text-dark-600/90 font-bold dark:text-gray-200 mb-6">Computational Designer & Developer</p>
+                                        <h1 class="text-3xl sm:text-4xl font-bold mb-4 text-dark-600 dark:text-white">
+                                            I'm <span class="text-primary-500 dark:text-magenta-400">Robin Song</span>
+                                        </h1>
+                                        <p class="text-dark-600/90 font-bold dark:text-gray-200 mb-6">Computational
+                                            Designer & Developer</p>
                                     </div>
                                     <div class="flex flex-wrap gap-4 justify-center">
-                                        <a href="/files/CV_Song Qizhen.pdf" download="CV_Robin_Song" class="inline-flex items-center justify-center px-6 py-3 bg-white hover:bg-white/30 dark:bg-dark-300/50 dark:hover:bg-dark-400/60 text-black dark:text-gray-200 backdrop-blur-sm font-medium rounded-full transition-all duration-200 hover:scale-105">
+                                        <a href="/files/CV_Song Qizhen.pdf" download="CV_Robin_Song"
+                                            class="inline-flex items-center justify-center px-6 py-3 bg-white hover:bg-white/30 dark:bg-dark-300/50 dark:hover:bg-dark-400/60 text-black dark:text-gray-200 backdrop-blur-sm font-medium rounded-full transition-all duration-200 hover:scale-105">
                                             <i class="fas fa-download mr-2"></i>
                                             <span class="lang-en">Download Resume</span>
                                         </a>
@@ -154,31 +169,35 @@
             </div>
             <!-- 向下箭头 -->
             <div class="animate-arrow mt-6 py-16">
-                <svg class="arrow-svg" viewBox="0 0 60 20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="butt">
-                  <polyline points="5,3 30,10 55,3" />
-                  <polyline points="5,10 30,17 55,10" />
+                <svg class="arrow-svg" viewBox="0 0 60 20" fill="none" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="butt">
+                    <polyline points="5,3 30,10 55,3" />
+                    <polyline points="5,10 30,17 55,10" />
                 </svg>
             </div>
         </section>
 
         <!-- 项目部分 -->
-        <section id="CAD" class="mb-16 scroll-reveal scroll" style="animation-delay: 0.3s;"> 
+        <section id="CAD" class="mb-16 scroll-reveal scroll" style="animation-delay: 0.3s;">
             <div>
                 <h2 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">Research & Development</h2>
             </div>
-            
+
             <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 gap-4">
                 <!-- 项目1: Probability Community (大尺寸) -->
                 <div class="group relative overflow-hidden rounded-lg">
                     <a href="/projects/code/StableShape.html" class="block h-full">
-                        <img src="https://i.imgur.com/uRo4rW3.jpeg" alt="StableShape" class="w-full h-[30rem] object-cover transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-primary-500/10 dark:from-magenta-500/10 to-primary-500/30 dark:to-magenta-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                        <img src="./images/project/pc/5 (1).png" alt="StableShape"
+                            class="w-full h-[30rem] object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-primary-500/10 dark:from-magenta-500/10 to-primary-500/30 dark:to-magenta-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                             <div class="p-4 sm:p-6 text-white">
                                 <h3 class="text-lg sm:text-xl font-light mb-1 sm:mb-2">
                                     <span class="lang-en">StableShape</span>
                                 </h3>
                                 <p class="font-light text-xs sm:text-sm">
-                                    <span class="lang-en">Morphology Generation Grasshopper Plugin Based on Computational Fluid Dynamics</span>
+                                    <span class="lang-en">Morphology Generation Grasshopper Plugin Based on
+                                        Computational Fluid Dynamics</span>
                                 </p>
                             </div>
                         </div>
@@ -186,14 +205,17 @@
                 </div>
                 <div class="group relative overflow-hidden rounded-lg">
                     <a href="/projects/code/Seg.html" class="block h-full">
-                        <img src="https://i.imgur.com/cDkaVgf.png" alt="Seg & Predict" class="w-full h-[30rem] object-cover transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-primary-500/10 dark:from-magenta-500/10 to-primary-500/30 dark:to-magenta-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                        <img src="https://pic1.imgdb.cn/item/697160a71404c8e205f11a33.None" alt="Seg & Predict"
+                            class="w-full h-[30rem] object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-primary-500/10 dark:from-magenta-500/10 to-primary-500/30 dark:to-magenta-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                             <div class="p-4 sm:p-6 text-white">
                                 <h3 class="text-lg sm:text-xl font-light mb-1 sm:mb-2">
                                     <span class="lang-en">Seg & Predict</span>
                                 </h3>
                                 <p class="font-light text-xs sm:text-sm">
-                                    <span class="lang-en">Integrating Image Segmentation and Machine Learning in London</span>
+                                    <span class="lang-en">Integrating Image Segmentation and Machine Learning in
+                                        London</span>
                                 </p>
                             </div>
                         </div>
@@ -201,14 +223,17 @@
                 </div>
                 <div class="group relative overflow-hidden rounded-lg">
                     <a href="/projects/code/BuildingGenerator.html" class="block h-full">
-                        <img src="https://i.imgur.com/6C0m54l.gif" alt="RL-BuildingGenerator" class="w-full h-[30rem] object-cover transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-primary-500/50 dark:from-magenta-500/50 to-primary-500/30 dark:to-magenta-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                        <img src="https://pic1.imgdb.cn/item/6971607d1404c8e205f11a24.None" alt="RL-BuildingGenerator"
+                            class="w-full h-[30rem] object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-primary-500/50 dark:from-magenta-500/50 to-primary-500/30 dark:to-magenta-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                             <div class="p-4 sm:p-6 text-white">
                                 <h3 class="text-lg sm:text-xl font-light mb-1 sm:mb-2">
                                     <span class="lang-en">RL-BuildingGenerator</span>
                                 </h3>
                                 <p class="font-light text-xs sm:text-sm">
-                                    <span class="lang-en">Agent-based Reinforcement Learning to Increase Housing Density in London</span>
+                                    <span class="lang-en">Agent-based Reinforcement Learning to Increase Housing Density
+                                        in London</span>
                                 </p>
                             </div>
                         </div>
@@ -216,53 +241,64 @@
                 </div>
         </section>
 
-        <section id="projects" class="mb-16 scroll-reveal py-0 md:pt-24 md:pb-48" style="animation-delay: 0.3s;"> 
+        <section id="projects" class="mb-16 scroll-reveal py-0 md:pt-24 md:pb-48" style="animation-delay: 0.3s;">
 
             <div>
                 <h2 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">Design</h2>
             </div>
-            
+
             <div class="grid grid-cols-1 sm:grid-cols-8 md:grid-cols-12 gap-4 h-[30rem]">
                 <!-- 项目1: Probability Community (大尺寸) -->
-                <div class="col-span-1 sm:col-span-4 md:col-span-4 sm:row-span-3 group relative overflow-hidden rounded-lg">
+                <div
+                    class="col-span-1 sm:col-span-4 md:col-span-4 sm:row-span-3 group relative overflow-hidden rounded-lg">
                     <a href="/projects/design/probability.html" class="block h-full">
-                        <img src="https://i.imgur.com/yrmxu6h.jpeg" alt="Probability Community" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-primary-500/10 dark:from-magenta-500/10 to-primary-500/30 dark:to-magenta-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                        <img src="./images/project/pc/5 (1).png" alt="Probability Community"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-primary-500/10 dark:from-magenta-500/10 to-primary-500/30 dark:to-magenta-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                             <div class="p-4 sm:p-6 text-white">
                                 <h3 class="text-lg sm:text-xl font-light mb-1 sm:mb-2">
                                     <span class="lang-en">Probability</span>
                                 </h3>
                                 <p class="font-light text-xs sm:text-sm">
-                                    <span class="lang-en">Collective housing generated using Wave Function Collapse algorithm</span>
+                                    <span class="lang-en">Collective housing generated using Wave Function Collapse
+                                        algorithm</span>
                                 </p>
                             </div>
                         </div>
                     </a>
                 </div>
-                
-                
+
+
                 <!-- 项目3: Still -->
-                <div class="col-span-1 sm:col-span-4 md:col-span-4 sm:row-span-3 group relative overflow-hidden rounded-lg">
+                <div
+                    class="col-span-1 sm:col-span-4 md:col-span-4 sm:row-span-3 group relative overflow-hidden rounded-lg">
                     <a href="/projects/design/still.html" class="block h-full">
-                        <img src="https://i.imgur.com/U43DSeZ.jpeg" alt="Still" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-primary-500/10 dark:from-magenta-500/10 to-primary-500/30 dark:to-magenta-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                        <img src="https://pic1.imgdb.cn/item/6971603d1404c8e205f11a1f.None" alt="Still"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-primary-500/10 dark:from-magenta-500/10 to-primary-500/30 dark:to-magenta-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                             <div class="p-3 sm:p-4 text-white">
                                 <h3 class="text-base sm:text-lg font-light mb-1">
                                     <span class="lang-en">Still</span>
                                 </h3>
                                 <p class="font-light text-xs">
-                                    <span class="lang-en">Climber's shelter design on the top of the Polish mountain</span>
+                                    <span class="lang-en">Climber's shelter design on the top of the Polish
+                                        mountain</span>
                                 </p>
                             </div>
                         </div>
                     </a>
                 </div>
-                
+
                 <!-- 项目4: Yokai Hall -->
-                <div class="col-span-1 sm:col-span-4 md:col-span-4 sm:row-span-3 group relative overflow-hidden rounded-lg">
+                <div
+                    class="col-span-1 sm:col-span-4 md:col-span-4 sm:row-span-3 group relative overflow-hidden rounded-lg">
                     <a href="/projects/design/yokai.html" class="block h-full">
-                        <img src="https://i.imgur.com/lolUJqW.jpeg" alt="Yokai Hall" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-primary-500/10 dark:from-magenta-500/10 to-primary-500/30 dark:to-magenta-500/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                        <img src="https://pic1.imgdb.cn/item/697160cc1404c8e205f11a46.None" alt="Yokai Hall"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-primary-500/10 dark:from-magenta-500/10 to-primary-500/30 dark:to-magenta-500/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                             <div class="p-3 sm:p-4 text-white">
                                 <h3 class="text-base sm:text-lg font-light mb-1">
                                     <span>Yokai Hall</span>
@@ -280,18 +316,20 @@
 
         <!-- 微信二维码弹窗 -->
         <div id="wechatModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-            <div class="bg-white dark:bg-dark-200 rounded-lg shadow-xl p-6 max-w-sm mx-auto text-center transform transition-all">
-                
+            <div
+                class="bg-white dark:bg-dark-200 rounded-lg shadow-xl p-6 max-w-sm mx-auto text-center transform transition-all">
+
                 <div class="mb-4">
                     <img src="/images/weixin.jpg" alt="WeChat QR Code" class="w-48 h-64 mx-auto">
                 </div>
-                <button id="closeModal" class="px-4 py-2 bg-primary-500 dark:bg-magenta-500 text-white rounded hover:bg-primary-600 dark:hover:bg-magenta-600 transition-colors">
+                <button id="closeModal"
+                    class="px-4 py-2 bg-primary-500 dark:bg-magenta-500 text-white rounded hover:bg-primary-600 dark:hover:bg-magenta-600 transition-colors">
                     <span class="lang-en">Close</span>
                 </button>
             </div>
         </div>
     </main>
-    
+
     <!-- 2. 机器人占位符 -->
     <div id="chatbot-placeholder"></div>
 
@@ -307,11 +345,11 @@
 
     <script>
         // 页面加载时，动态加载组件
-        document.addEventListener("DOMContentLoaded", function() {
-            
+        document.addEventListener("DOMContentLoaded", function () {
+
             // 加载导航栏，并在加载完成后高亮当前页
             loadComponent('header-placeholder', '/components/header.html', window.initHeaderLogic);
-            
+
             // 加载页脚
             loadComponent('footer-placeholder', '/components/footer.html');
 
@@ -320,4 +358,5 @@
         });
     </script>
 </body>
+
 </html>

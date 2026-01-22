@@ -17,6 +17,7 @@ async function fetchKnowledgeBase() {
         
 [Basic Info]
 Intro: ${data.profile.intro}
+Hope: ${data.profile.hope}
 Skills: ${data.profile.skills.join(", ")}
 Contact: ${data.profile.email}
 Github: ${data.profile.socials.github}

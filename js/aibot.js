@@ -5,13 +5,13 @@ let messageHistory = [];
 /**
  * 从 assets/site-data.json 读取数据
  */
-async function fetchKnowledgeBase() {   
+async function fetchKnowledgeBase() {
     try {
         const response = await fetch('./files/botdata.json');
         if (!response.ok) throw new Error("Failed to load knowledge base");
-        
+
         const data = await response.json();
-        
+
         // 构建更详细的 System Prompt
         let prompt = `System Prompt: You are the AI portfolio assistant for ${data.profile.name} (${data.profile.title}), always pretent to be the portfolio owner and keep the answer brief, no more than 50 words. be human-like, use some words for greeting. 
         
@@ -30,23 +30,23 @@ Github: ${data.profile.socials.github}
             if (proj.subtitle) prompt += ` - ${proj.subtitle}`;
             prompt += `\n   Type: ${proj.category}`;
             prompt += `\n   Description: ${proj.description}`;
-            
+
             if (proj.tech_stack && proj.tech_stack.length > 0) {
                 prompt += `\n   Tech Stack: ${proj.tech_stack.join(", ")}`;
             }
-            
+
             if (proj.methodology) {
                 prompt += `\n   Methodology: ${proj.methodology}`;
             }
-            
+
             if (proj.outcomes) {
                 prompt += `\n   Key Outcomes/Results: ${proj.outcomes}`;
             }
-            
+
             if (proj.details) {
                 prompt += `\n   Details: ${proj.details}`;
             }
-            
+
             prompt += `\n`;
         });
 
@@ -66,26 +66,29 @@ Github: ${data.profile.socials.github}
 }
 
 // 初始化 Chatbot
-window.initChatbot = async function() {
+window.initChatbot = async function () {
     console.log("Chatbot Initializing...");
-    
+
     // 1. 异步构建 System Prompt
     const systemContext = await fetchKnowledgeBase();
-    
+
     messageHistory = [{ role: "system", content: systemContext }];
     console.log("Knowledge Base Loaded with " + systemContext.length + " chars.");
 
     // 2. 滚动隔离逻辑
     const chatBox = document.getElementById('chat-box');
-    if(chatBox) {
+    if (chatBox) {
         // 防止滚轮事件冒泡到全屏滚动插件
         chatBox.addEventListener('wheel', (e) => e.stopPropagation(), { passive: false });
         chatBox.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: false });
     }
+
+    // 3. 初始化拖拽调整大小
+    initChatbotResize();
 }
 
 // 开关聊天框
-window.toggleChat = function() {
+window.toggleChat = function () {
     const box = document.getElementById('chat-box');
     if (!box) return;
     if (box.classList.contains('scale-0')) {
@@ -93,7 +96,7 @@ window.toggleChat = function() {
         box.classList.add('scale-100', 'opacity-100');
         setTimeout(() => {
             const input = document.getElementById('chat-input');
-            if(input) input.focus();
+            if (input) input.focus();
         }, 300);
     } else {
         box.classList.add('scale-0', 'opacity-0');
@@ -102,13 +105,13 @@ window.toggleChat = function() {
 }
 
 // 发送消息
-window.handleChat = async function(e) {
+window.handleChat = async function (e) {
     e.preventDefault();
     const input = document.getElementById('chat-input');
     const btn = document.getElementById('chat-send');
     const msg = input.value.trim();
-    
-    if(!msg) return;
+
+    if (!msg) return;
 
     addMsg(msg, 'user');
     input.value = '';
@@ -125,7 +128,7 @@ window.handleChat = async function(e) {
         });
 
         if (!res.ok) throw new Error("Server error");
-        
+
         const data = await res.json();
         const aiReply = data.reply;
 
@@ -136,7 +139,7 @@ window.handleChat = async function(e) {
         console.error(err);
         addMsg("Sorry, I can't reach the server right now.", 'ai');
     } finally {
-        if(btn) {
+        if (btn) {
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-arrow-up text-xs"></i>';
         }
@@ -146,15 +149,15 @@ window.handleChat = async function(e) {
 // 渲染消息
 function addMsg(text, sender) {
     const container = document.getElementById('chat-messages');
-    if(!container) return;
-    
+    if (!container) return;
+
     const div = document.createElement('div');
     div.className = `flex gap-3 chat-bubble-enter ${sender === 'user' ? 'flex-row-reverse' : ''}`;
-    
-    const avatarColor = sender === 'user' 
-        ? 'bg-gray-400' 
+
+    const avatarColor = sender === 'user'
+        ? 'bg-gray-400'
         : 'bg-gradient-to-br from-primary-400 to-primary-600 dark:from-magenta-500 dark:to-magenta-700';
-        
+
     const bubbleColor = sender === 'user'
         ? 'bg-primary-500 dark:bg-magenta-600 text-white rounded-tr-none'
         : 'bg-white dark:bg-dark-300 border border-gray-100 dark:border-dark-400 text-gray-700 dark:text-gray-200 rounded-tl-none';
@@ -169,9 +172,74 @@ function addMsg(text, sender) {
             ${content}
         </div>
     `;
-    
+
     container.appendChild(div);
     setTimeout(() => {
         container.scrollTop = container.scrollHeight;
     }, 50);
+}
+
+// 初始化拖拽调整大小逻辑
+function initChatbotResize() {
+    const chatBox = document.getElementById('chat-box');
+    const handle = document.getElementById('chat-resize-handle');
+
+    if (!chatBox || !handle) return;
+
+    let isResizing = false;
+    let startX, startY, startWidth, startHeight;
+
+    // 鼠标按下开始拖拽
+    handle.addEventListener('mousedown', (e) => {
+        isResizing = true;
+
+        // 记录初始位置和尺寸
+        startX = e.clientX;
+        startY = e.clientY;
+
+        const rect = chatBox.getBoundingClientRect();
+        startWidth = rect.width;
+        startHeight = rect.height;
+
+        // 禁用过渡效果，防止拖拽延迟
+        chatBox.style.transition = 'none';
+
+        // 防止选中文字
+        document.body.style.userSelect = 'none';
+
+        // 添加全局遮罩防止 iframe 等干扰
+        e.preventDefault();
+    });
+
+    // 鼠标移动更新尺寸
+    window.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+
+        // 计算偏移量
+        // 向左拖动 (deltaX < 0) -> 宽度增加
+        // 向右拖动 (deltaX > 0) -> 宽度减小
+        const deltaX = startX - e.clientX;
+
+        // 向上拖动 (deltaY < 0) -> 高度增加
+        // 向下拖动 (deltaY > 0) -> 高度减小
+        const deltaY = startY - e.clientY;
+
+        // 计算新尺寸 (限制最小和最大尺寸)
+        const newWidth = Math.max(300, Math.min(800, startWidth + deltaX));
+        const newHeight = Math.max(400, Math.min(900, startHeight + deltaY));
+
+        chatBox.style.width = newWidth + 'px';
+        chatBox.style.height = newHeight + 'px';
+    });
+
+    // 鼠标松开结束拖拽
+    window.addEventListener('mouseup', () => {
+        if (isResizing) {
+            isResizing = false;
+
+            // 恢复过渡效果
+            chatBox.style.transition = '';
+            document.body.style.userSelect = '';
+        }
+    });
 }

@@ -341,6 +341,7 @@
     <script src="/js/navigation.js"></script>
     <script src="/js/script.js"></script>
     <script src="/js/aibot.js"></script>
+    <script src="/js/orbit.js"></script>
     <script src="/js/loader.js"></script>
 
     <script>
@@ -355,6 +356,9 @@
 
             // 加载机器人，并初始化逻辑
             loadComponent('chatbot-placeholder', '/components/chatbot.html', window.initChatbot);
+
+            // 初始化 Logo 轨道动画 (如果存在)
+            if (window.initLogoOrbit) window.initLogoOrbit();
         });
     </script>
 </body>

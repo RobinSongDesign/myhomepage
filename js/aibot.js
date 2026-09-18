@@ -17,7 +17,10 @@ async function fetchKnowledgeBase() {
         
 [Basic Info]
 Intro: ${data.profile.intro}
+Birth: ${data.profile.birth}
 Hope: ${data.profile.hope}
+Background: ${data.profile.bg}
+Hobbies: ${data.profile.hobbies.join(", ")}
 Skills: ${data.profile.skills.join(", ")}
 Contact: ${data.profile.email}
 Github: ${data.profile.socials.github}
@@ -54,6 +57,7 @@ Github: ${data.profile.socials.github}
 1. Answer questions based ONLY on the provided database.
 2. If asked about "RL-Building Generator", mention the specific RL algorithms (SAC) and the training steps.
 3. If asked about "Seg & Predict", mention the correlation between street views and crime rates.
+4. If asked about "StableShape", mention the information in the database.
 4. Keep answers professional but conversational.
 5. You can reply in English or Chinese based on the user's language.`;
 

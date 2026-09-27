@@ -1,0 +1,47 @@
+---
+/** Two stacked images labelled "Before" and "After". */
+import Media from '../Media.astro';
+
+interface Props {
+  before: string;
+  after: string;
+  /** What is being compared, used in the alt text. */
+  subject: string;
+  beforeLabel?: string;
+  afterLabel?: string;
+}
+
+const { before, after, subject, beforeLabel = 'Before training', afterLabel = 'After training' } = Astro.props;
+---
+
+<div class="ba">
+  <figure>
+    <Media src={before} alt={`${subject} — ${beforeLabel.toLowerCase()}`} />
+    <figcaption class="label">{beforeLabel}</figcaption>
+  </figure>
+  <figure>
+    <Media src={after} alt={`${subject} — ${afterLabel.toLowerCase()}`} />
+    <figcaption class="label" data-after>{afterLabel}</figcaption>
+  </figure>
+</div>
+
+<style>
+  .ba {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  figure {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  figure :global(img) {
+    width: 100%;
+    background: var(--paper-2);
+  }
+
+  [data-after] {
+    color: var(--accent-ink);
+  }
+</style>

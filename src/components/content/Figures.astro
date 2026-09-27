@@ -1,0 +1,45 @@
+---
+/** A row of figures. Collapses to one column on small screens. */
+interface Props {
+  cols?: 2 | 3 | 4;
+  /** 'full' spans the page; 'text' stays in the reading column. */
+  span?: 'full' | 'text';
+}
+
+const { cols = 2, span = 'full' } = Astro.props;
+---
+
+<div class:list={['figs', { 'span-full': span === 'full' }]} data-cols={cols}>
+  <slot />
+</div>
+
+<style>
+  .figs {
+    display: grid;
+    gap: var(--space-10) var(--col-gap);
+    align-items: start;
+  }
+
+  @media (min-width: 40rem) {
+    .figs[data-cols='3'],
+    .figs[data-cols='4'] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .figs[data-cols='2'] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .figs[data-cols='3'] {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .figs[data-cols='4'] {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -1,0 +1,35 @@
+---
+/** A lazily loaded third-party embed (video, post) at a fixed aspect ratio. */
+interface Props {
+  src: string;
+  title: string;
+  ratio?: string;
+  caption?: string;
+}
+
+const { src, title, ratio = '16 / 9', caption } = Astro.props;
+---
+
+<figure class="embed span-full">
+  <div class="frame" style={`aspect-ratio: ${ratio}`}>
+    <iframe src={src} title={title} loading="lazy" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
+  </div>
+  {caption && <figcaption class="label">{caption}</figcaption>}
+</figure>
+
+<style>
+  .embed {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .frame {
+    background: var(--paper-2);
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>

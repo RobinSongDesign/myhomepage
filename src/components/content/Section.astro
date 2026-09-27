@@ -1,0 +1,78 @@
+---
+/**
+ * A numbered chapter of a project page. The heading sits in the left four
+ * columns; text flows in the right eight; figures and grids span the full width.
+ * Numbers come from a CSS counter, so sections can be reordered freely.
+ */
+interface Props {
+  title: string;
+  id?: string;
+}
+
+const { title, id } = Astro.props;
+---
+
+<section class="p-section" id={id} data-reveal>
+  <h2 class="p-title">{title}</h2>
+  <slot />
+</section>
+
+<style>
+  .p-section {
+    counter-increment: section;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    row-gap: var(--space-10);
+    align-items: start;
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--rule);
+  }
+
+  .p-section + .p-section {
+    margin-top: var(--section);
+  }
+
+  .p-title {
+    grid-column: 1 / span 4;
+    max-width: 16ch;
+    font-size: var(--text-xl);
+    line-height: 1.2;
+  }
+
+  .p-title::before {
+    content: counter(section, decimal-leading-zero);
+    display: block;
+    margin-bottom: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 400;
+    letter-spacing: var(--tracking-label);
+    color: var(--accent-ink);
+  }
+
+  /* Default: everything else reads in the text column. */
+  .p-section > :global(:not(.p-title)) {
+    grid-column: 5 / -1;
+  }
+
+  .p-section > :global(.fig[data-span='full']),
+  .p-section > :global(.span-full) {
+    grid-column: 1 / -1;
+  }
+
+  @media (max-width: 63.99rem) {
+    .p-section {
+      row-gap: var(--space-8);
+    }
+
+    .p-title {
+      grid-column: 1 / -1;
+      max-width: none;
+    }
+
+    .p-section > :global(:not(.p-title)) {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

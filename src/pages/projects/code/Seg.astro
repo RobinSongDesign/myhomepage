@@ -1,0 +1,176 @@
+---
+import ProjectLayout from '../../../layouts/ProjectLayout.astro';
+import Section from '../../../components/content/Section.astro';
+import Figure from '../../../components/content/Figure.astro';
+import Figures from '../../../components/content/Figures.astro';
+import Steps from '../../../components/content/Steps.astro';
+import Cards from '../../../components/content/Cards.astro';
+import Card from '../../../components/content/Card.astro';
+import Embed from '../../../components/content/Embed.astro';
+import { imgdb as img } from '../../../data/imgdb';
+
+const demo = 'http://seg.robinsong.top';
+---
+
+<ProjectLayout id="seg-predict">
+  <Section title="Project overview">
+    <div class="prose">
+      <p>
+        This research explores the relationship between street-view imagery and crime rates in London using computer
+        vision and machine learning. By analyzing the visual characteristics of urban environments, we look for
+        patterns that correlate with criminal activity and develop predictive models for urban safety assessment.
+      </p>
+      <p>
+        The project combines image segmentation, regression analysis and reinforcement learning into an automated
+        framework for predicting crime rates from street-view data — offering insight for urban planning, policy-making
+        and community safety.
+      </p>
+    </div>
+  </Section>
+
+  <Section title="Research question">
+    <Cards span="text">
+      <Card title="Core question" kicker="Q">
+        <p>How can we quantify the correlation between street views and crime rates?</p>
+        <p>Can visual features of urban environments predict areas with higher crime incidence?</p>
+      </Card>
+      <Card title="Research goal" kicker="Aim">
+        <p>Develop automated tools that predict crime rates from street-view imagery.</p>
+        <p>Create actionable insight for urban planning and safety improvement.</p>
+      </Card>
+    </Cards>
+    <Figure src={img('697160f41404c8e205f11a54')} alt="Street views of London framing the research question" caption="Urban safety and the street view." />
+  </Section>
+
+  <Section title="Methodology">
+    <Steps
+      items={[
+        { title: 'Data collection', text: 'Crime data and street-view images from London.' },
+        { title: 'Segmentation', text: 'PSPNet trained on ADE20k for scene parsing.' },
+        { title: 'Regression', text: 'Random Forest and XGBoost for prediction.' },
+        { title: 'Optimization', text: 'SAC reinforcement learning to improve low-scoring scenes.' },
+      ]}
+    />
+    <Figure src={img('697160c01404c8e205f11a40')} alt="Research methodology workflow diagram" caption="Methodology workflow." />
+  </Section>
+
+  <Section title="Image segmentation">
+    <Cards cols={3}>
+      <Card title="PSPNet" kicker="Network">
+        <p>Pyramid Scene Parsing Network, with a Pyramid Pooling Module for semantic segmentation.</p>
+      </Card>
+      <Card title="ResNet-50" kicker="Backbone">
+        <p>A 50-layer CNN with residual connections that avoid vanishing gradients.</p>
+      </Card>
+      <Card title="ADE20k" kicker="Dataset">
+        <p>20,000+ images across 150 semantic categories for comprehensive scene understanding.</p>
+      </Card>
+    </Cards>
+    <Figure src={img('697160f31404c8e205f11a52')} alt="Original street view next to its semantic segmentation" caption="Original and segmented street view." />
+  </Section>
+
+  <Section title="Regression analysis">
+    <Cards cols={3}>
+      <Card title="Linear regression" kicker="Rejected">
+        <dl class="kv">
+          <div><dt>R²</dt><dd>0.348</dd></div>
+          <div><dt>Adjusted R²</dt><dd>0.343</dd></div>
+        </dl>
+        <p>Rejected due to low performance.</p>
+      </Card>
+      <Card title="Random Forest" kicker="Accepted">
+        <dl class="kv">
+          <div><dt>R²</dt><dd>0.451</dd></div>
+          <div><dt>Variance explained</dt><dd>44.32%</dd></div>
+        </dl>
+        <p>Accepted for low-to-middle crime rates.</p>
+      </Card>
+      <Card title="XGBoost" kicker="Accepted">
+        <dl class="kv">
+          <div><dt>R²</dt><dd>0.451</dd></div>
+          <div><dt>Distribution</dt><dd>Even spread</dd></div>
+        </dl>
+        <p>Accepted for higher crime rates.</p>
+      </Card>
+    </Cards>
+    <Figures cols={3}>
+      <Figure src={img('697160ba1404c8e205f11a39')} alt="Regression model performance chart" caption="Model performance I." />
+      <Figure src={img('697160f31404c8e205f11a4f')} alt="Regression model performance chart" caption="Model performance II." />
+      <Figure src={img('6971603c1404c8e205f11a1b')} alt="Regression model performance chart" caption="Model performance III." />
+    </Figures>
+  </Section>
+
+  <Section title="Reinforcement learning optimization">
+    <Cards>
+      <Card title="SAC (Soft Actor-Critic)" kicker="Agent">
+        <ul class="marks">
+          <li>An actor network generates actions that modify the image.</li>
+          <li>A dual-Q network evaluates the value of those actions.</li>
+          <li>Together they guide optimization toward lower predicted crime.</li>
+        </ul>
+      </Card>
+      <Card title="Reward mechanism" kicker="Reward">
+        <dl class="kv">
+          <div><dt>Score improvement</dt><dd>Sigmoid function</dd></div>
+          <div><dt>Colour-ratio reward</dt><dd>Weighted by correlation</dd></div>
+          <div><dt>Trend reward</dt><dd>5-step regression</dd></div>
+        </dl>
+      </Card>
+    </Cards>
+    <Figures cols={2}>
+      <Figure src={img('697160bb1404c8e205f11a3a')} alt="Soft Actor-Critic architecture diagram" caption="SAC architecture." />
+      <Figure src={img('697160b11404c8e205f11a38')} alt="Reinforcement learning optimization results" caption="Optimization process." />
+    </Figures>
+  </Section>
+
+  <Section title="Interactive platform">
+    <div class="prose">
+      <p>
+        A web platform wraps the whole pipeline: upload a street view, see it segmented in real time, get a predicted
+        crime score and let the agent suggest improvements. <a href={demo} target="_blank" rel="noopener noreferrer">Open the live demo ↗</a>
+      </p>
+    </div>
+    <Cards>
+      <Card title="Platform features" kicker="Features">
+        <ul class="marks">
+          <li>Upload street-view images</li>
+          <li>Real-time image segmentation</li>
+          <li>Crime-rate prediction</li>
+          <li>AI-powered optimization</li>
+        </ul>
+      </Card>
+      <Card title="Technical stack" kicker="Stack">
+        <dl class="kv">
+          <div><dt>Backend</dt><dd>Flask · PyTorch · OpenCV</dd></div>
+          <div><dt>Frontend</dt><dd>React · live, interactive visualization</dd></div>
+        </dl>
+      </Card>
+    </Cards>
+    <Figures cols={2}>
+      <Figure src={img('6971608d1404c8e205f11a2a')} alt="Screenshot of the interactive platform interface" caption="Platform interface." />
+      <Figure src={img('697160d61404c8e205f11a4a')} alt="Platform prediction and optimization view" caption="Prediction and optimization view." />
+    </Figures>
+  </Section>
+
+  <Section title="Results & evaluation">
+    <Cards>
+      <Card title="Key achievements" kicker="Outcomes">
+        <ul class="marks">
+          <li data-mark="+">Correlated street-view features with crime rates</li>
+          <li data-mark="+">Developed an automated workflow for crime analysis</li>
+          <li data-mark="+">Introduced new reward mechanisms for reinforcement learning</li>
+          <li data-mark="+">Built a scalable platform for real-time analysis</li>
+        </ul>
+      </Card>
+      <Card title="Limitations" kicker="Next steps">
+        <ul class="marks">
+          <li data-mark="−">Limited database scale and diversity</li>
+          <li data-mark="−">Segmentation precision needs improvement</li>
+          <li data-mark="−">Overall R² values remain below 0.5</li>
+          <li data-mark="−">The reinforcement learning stage needs further tuning</li>
+        </ul>
+      </Card>
+    </Cards>
+    <Embed src="https://drive.google.com/file/d/1xykPZuhBnauGN1PhVaE4x7I4pSEfoegl/preview" title="Seg & Predict results video" />
+  </Section>
+</ProjectLayout>

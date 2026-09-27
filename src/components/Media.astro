@@ -1,0 +1,62 @@
+---
+/**
+ * Renders a project image whether it is a remote URL (imgdb) or a local asset.
+ * Local assets go through Astro's pipeline (resized, WebP, srcset); remote ones
+ * get their intrinsic size from image-sizes.json so the layout never jumps.
+ *
+ * Don't read properties of a local image here (e.g. `src.width`): Astro then
+ * treats the multi-MB original as used and copies it into the build.
+ */
+import { Image } from 'astro:assets';
+import type { ImageSource } from '../data/projects';
+import sizesByUrl from '../data/image-sizes.json';
+
+interface Props {
+  src: ImageSource;
+  alt: string;
+  class?: string;
+  /** Responsive widths for local assets. */
+  widths?: number[];
+  sizes?: string;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+}
+
+const {
+  src,
+  alt,
+  class: className,
+  widths = [480, 800, 1200, 1800, 2400],
+  sizes = '100vw',
+  loading = 'lazy',
+  fetchpriority,
+} = Astro.props;
+
+const known: number[] | undefined = typeof src === 'string' ? (sizesByUrl as Record<string, number[]>)[src] : undefined;
+---
+
+{
+  typeof src === 'string' ? (
+    <img
+      src={src}
+      alt={alt}
+      class={className}
+      width={known?.[0]}
+      height={known?.[1]}
+      loading={loading}
+      decoding="async"
+      fetchpriority={fetchpriority}
+    />
+  ) : (
+    <Image
+      src={src}
+      alt={alt}
+      class={className}
+      width={Math.max(...widths)}
+      widths={widths}
+      sizes={sizes}
+      loading={loading}
+      fetchpriority={fetchpriority}
+    />
+  )
+}

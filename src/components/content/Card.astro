@@ -1,0 +1,74 @@
+---
+/**
+ * A bordered box for a model, a rule, a feature list… Put an image in the
+ * `media` slot and text or a list in the default slot.
+ */
+interface Props {
+  title: string;
+  /** Small mono line above the title. */
+  kicker?: string;
+  /** Media sits on a light plate (for diagrams with transparent backgrounds). */
+  plate?: boolean;
+}
+
+const { title, kicker, plate = false } = Astro.props;
+---
+
+<div class="card">
+  {kicker && <p class="label">{kicker}</p>}
+  <h3 class="card-title">{title}</h3>
+  {
+    Astro.slots.has('media') && (
+      <div class="card-media" data-plate={plate || undefined}>
+        <slot name="media" />
+      </div>
+    )
+  }
+  <div class="card-body">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    border: 1px solid var(--rule);
+    min-width: 0;
+  }
+
+  .card-title {
+    font-size: var(--text-base);
+    letter-spacing: -0.01em;
+  }
+
+  .card-media {
+    margin-block: var(--space-2);
+    background: var(--paper-2);
+    overflow: hidden;
+  }
+
+  .card-media[data-plate] {
+    padding: var(--space-3);
+    background: var(--plate);
+  }
+
+  .card-media :global(img) {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .card-body {
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+
+  .card-body > :global(* + *) {
+    margin-top: 0.75em;
+  }
+</style>

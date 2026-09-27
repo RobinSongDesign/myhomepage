@@ -1,0 +1,79 @@
+---
+import ProjectLayout from '../../../layouts/ProjectLayout.astro';
+import Section from '../../../components/content/Section.astro';
+import Figure from '../../../components/content/Figure.astro';
+import Figures from '../../../components/content/Figures.astro';
+
+import topology2d from '../../../assets/projects/form-force/topology-2d.jpg';
+import topology3d from '../../../assets/projects/form-force/topology-3d.jpg';
+import masterPlan from '../../../assets/projects/form-force/master-plan.jpg';
+import reflections from '../../../assets/projects/form-force/reflections.jpg';
+import renders from '../../../assets/projects/form-force/renders.jpg';
+import interior2 from '../../../assets/projects/form-force/interior-2.png';
+import interior3 from '../../../assets/projects/form-force/interior-3.png';
+
+const half = '(min-width: 48rem) 50vw, 100vw';
+---
+
+<ProjectLayout id="form-force">
+  <Section title="Project overview">
+    <div class="prose">
+      <p>
+        This project investigates the correspondence between force and form through graphic statics, looking for a new
+        design method that inverts form by designing force diagrams.
+      </p>
+      <p>
+        Force corresponds to form and can be vectorized, which leads to graphic statics. The information age has
+        transformed engineering design with computer-aided graphics, offering convenience and precision. Today’s
+        architectural innovation is challenged to fuse form and mechanics, prompting scholars and practitioners to
+        revive graphic statics as a vital tool in architectural education and practice.
+      </p>
+    </div>
+  </Section>
+
+  <Section title="2D topology experiments">
+    <Figure src={topology2d} alt="Two-dimensional form and force diagram experiments" caption="2D topology experiments." />
+  </Section>
+
+  <Section title="3D topology experiments">
+    <div class="prose">
+      <p>
+        Unlike in 2D, the force diagram in 3D graphic statics is represented by a surface rather than a vector: the
+        surface normal gives the direction of the force and its area gives the magnitude. Every form diagram has a
+        corresponding force diagram — so we can design the force diagram to deduce the form, inverting the usual
+        process of deriving the force diagram from the form for validation.
+      </p>
+    </div>
+    <Figure src={topology3d} alt="Three-dimensional form and force diagram experiments" caption="3D topology experiments." />
+  </Section>
+
+  <Section title="Master plan">
+    <Figure
+      src={masterPlan}
+      alt="Master plan"
+      caption="1 Offices · 2 Meeting rooms · 3 Elevator rooms · 4 Restrooms · 5 Corridors · 6 Triangular stairs · 7 Entrance garden."
+      plate
+    />
+  </Section>
+
+  <Section title="From cells to form">
+    <div class="prose">
+      <p>
+        In Grasshopper, I built a series of cells from precise surfaces, each aligned with an accurate form. The
+        Polyframe plugin then calculates the internal forces, from which the final form emerges.
+      </p>
+    </div>
+    <Figure src={reflections} alt="Force and form diagrams for each part of the building" caption="The reflection of each part." plate />
+  </Section>
+
+  <Section title="Renders">
+    <div class="prose">
+      <p>Rendered with the assistance of the AI tool Stable Diffusion.</p>
+    </div>
+    <Figure src={renders} alt="Rendered views of the building" caption="Renders." />
+    <Figures cols={2}>
+      <Figure src={interior2} alt="Interior with branching structural columns" caption="Interior view I." sizes={half} />
+      <Figure src={interior3} alt="Interior with branching columns and circular skylights" caption="Interior view II." sizes={half} />
+    </Figures>
+  </Section>
+</ProjectLayout>

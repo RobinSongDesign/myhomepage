@@ -1,0 +1,216 @@
+---
+/**
+ * A live vector field: a lattice of short strokes that follow a slowly drifting
+ * flow and curl around the cursor, like iron filings around a magnet — a nod to
+ * the field-to-form ideas in StableShape and Form and Force.
+ */
+interface Props {
+  class?: string;
+  /** Lattice spacing in CSS pixels. */
+  spacing?: number;
+}
+
+const { class: className, spacing = 26 } = Astro.props;
+---
+
+<canvas class:list={['field', className]} data-field data-spacing={spacing} aria-hidden="true"></canvas>
+
+<script>
+  const TAU = Math.PI * 2;
+
+  function readColor(name: string) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#161615';
+  }
+
+  /** Parses #rgb / #rrggbb into an [r, g, b] triple. */
+  function hexToRgb(hex: string): [number, number, number] {
+    let h = hex.replace('#', '');
+    if (h.length === 3) h = [...h].map((c) => c + c).join('');
+    const n = parseInt(h, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+
+  class Field {
+    canvas: HTMLCanvasElement;
+    ctx: CanvasRenderingContext2D;
+    spacing: number;
+    width = 0;
+    height = 0;
+    dpr = 1;
+    ink: [number, number, number] = [22, 22, 21];
+    accent: [number, number, number] = [255, 79, 0];
+    pointer = { x: 0, y: 0, active: false };
+    focus = { x: 0, y: 0 };
+    running = false;
+    visible = true;
+    raf = 0;
+    start = performance.now();
+    reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    constructor(canvas: HTMLCanvasElement) {
+      this.canvas = canvas;
+      this.ctx = canvas.getContext('2d')!;
+      this.spacing = Number(canvas.dataset.spacing) || 26;
+      this.readTheme();
+      this.resize();
+      this.focus = { x: this.width * 0.68, y: this.height * 0.42 };
+      this.bind();
+      this.draw(this.start);
+      if (!this.reduced) this.play();
+    }
+
+    readTheme() {
+      this.ink = hexToRgb(readColor('--ink'));
+      this.accent = hexToRgb(readColor('--accent'));
+    }
+
+    resize() {
+      const rect = this.canvas.getBoundingClientRect();
+      this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+      this.width = rect.width;
+      this.height = rect.height;
+      this.canvas.width = Math.round(rect.width * this.dpr);
+      this.canvas.height = Math.round(rect.height * this.dpr);
+      this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    }
+
+    bind() {
+      new ResizeObserver(() => {
+        this.resize();
+        if (!this.running) this.draw(performance.now());
+      }).observe(this.canvas);
+
+      new MutationObserver(() => {
+        this.readTheme();
+        if (!this.running) this.draw(performance.now());
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+      new IntersectionObserver(([entry]) => {
+        this.visible = entry.isIntersecting;
+        this.visible && !this.reduced ? this.play() : this.pause();
+      }).observe(this.canvas);
+
+      document.addEventListener('visibilitychange', () => {
+        document.hidden || this.reduced ? this.pause() : this.visible && this.play();
+      });
+
+      // Track the pointer over the whole hero, not just the canvas, so text on
+      // top of the field doesn't block it.
+      const host = this.canvas.parentElement ?? this.canvas;
+      host.addEventListener('pointermove', (event) => {
+        if (event.pointerType !== 'mouse') return;
+        const rect = this.canvas.getBoundingClientRect();
+        this.pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top, active: true };
+      });
+      host.addEventListener('pointerleave', () => (this.pointer.active = false));
+    }
+
+    play() {
+      if (this.running) return;
+      this.running = true;
+      const tick = (now: number) => {
+        if (!this.running) return;
+        this.draw(now);
+        this.raf = requestAnimationFrame(tick);
+      };
+      this.raf = requestAnimationFrame(tick);
+    }
+
+    pause() {
+      this.running = false;
+      cancelAnimationFrame(this.raf);
+    }
+
+    draw(now: number) {
+      const { ctx, width: w, height: h, spacing: s } = this;
+      const t = (now - this.start) / 1000;
+
+      // The attractor eases toward the cursor, or wanders on its own when idle.
+      const target = this.pointer.active
+        ? this.pointer
+        : {
+            x: w * (0.62 + 0.24 * Math.sin(t * 0.13)),
+            y: h * (0.45 + 0.26 * Math.sin(t * 0.21 + 1.2)),
+          };
+      const ease = this.pointer.active ? 0.14 : 0.03;
+      this.focus.x += (target.x - this.focus.x) * ease;
+      this.focus.y += (target.y - this.focus.y) * ease;
+
+      const radius = Math.max(150, Math.min(w, h) * 0.34);
+      const inv2r2 = 1 / (2 * radius * radius);
+      const cols = Math.ceil(w / s) + 1;
+      const rows = Math.ceil(h / s) + 1;
+      const offsetX = (w - (cols - 1) * s) / 2;
+      const offsetY = (h - (rows - 1) * s) / 2;
+
+      // Strokes are bucketed by influence so each bucket is a single path.
+      const buckets: Path2D[] = [new Path2D(), new Path2D(), new Path2D(), new Path2D()];
+
+      for (let j = 0; j < rows; j++) {
+        const y = offsetY + j * s;
+        for (let i = 0; i < cols; i++) {
+          const x = offsetX + i * s;
+
+          // Ambient flow: a few layered sines give a smooth, curl-like drift.
+          const flow =
+            Math.sin(x * 0.0042 + t * 0.12) * 1.3 +
+            Math.cos(y * 0.0056 - t * 0.09) * 1.1 +
+            Math.sin((x - y) * 0.0021 + t * 0.05) * 0.8;
+
+          const dx = x - this.focus.x;
+          const dy = y - this.focus.y;
+          const influence = Math.exp(-(dx * dx + dy * dy) * inv2r2);
+          const swirl = Math.atan2(dy, dx) + Math.PI / 2 + influence * 0.6;
+
+          // Blend the two directions as vectors to avoid wrap-around jumps.
+          const vx = Math.cos(flow) * (1 - influence) + Math.cos(swirl) * influence;
+          const vy = Math.sin(flow) * (1 - influence) + Math.sin(swirl) * influence;
+          const angle = Math.atan2(vy, vx);
+
+          const half = s * (0.17 + 0.25 * influence);
+          const cx = Math.cos(angle) * half;
+          const cy = Math.sin(angle) * half;
+          const b = influence > 0.62 ? 3 : influence > 0.3 ? 2 : influence > 0.1 ? 1 : 0;
+          buckets[b].moveTo(x - cx, y - cy);
+          buckets[b].lineTo(x + cx, y + cy);
+        }
+      }
+
+      ctx.clearRect(0, 0, w, h);
+      ctx.lineCap = 'round';
+      const [ir, ig, ib] = this.ink;
+      const [ar, ag, ab] = this.accent;
+      const styles = [
+        { color: `rgba(${ir},${ig},${ib},0.2)`, width: 1 },
+        { color: `rgba(${ir},${ig},${ib},0.38)`, width: 1.1 },
+        { color: `rgba(${ir},${ig},${ib},0.62)`, width: 1.25 },
+        { color: `rgba(${ar},${ag},${ab},0.95)`, width: 1.5 },
+      ];
+      buckets.forEach((path, k) => {
+        ctx.strokeStyle = styles[k].color;
+        ctx.lineWidth = styles[k].width;
+        ctx.stroke(path);
+      });
+
+      // A small registration mark at the attractor.
+      ctx.strokeStyle = `rgba(${ar},${ag},${ab},0.9)`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(this.focus.x, this.focus.y, 5, 0, TAU);
+      ctx.moveTo(this.focus.x - 11, this.focus.y);
+      ctx.lineTo(this.focus.x + 11, this.focus.y);
+      ctx.moveTo(this.focus.x, this.focus.y - 11);
+      ctx.lineTo(this.focus.x, this.focus.y + 11);
+      ctx.stroke();
+    }
+  }
+
+  document.querySelectorAll<HTMLCanvasElement>('[data-field]').forEach((canvas) => new Field(canvas));
+</script>
+
+<style>
+  .field {
+    width: 100%;
+    height: 100%;
+  }
+</style>

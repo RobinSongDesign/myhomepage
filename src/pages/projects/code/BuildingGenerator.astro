@@ -1,0 +1,311 @@
+---
+import ProjectLayout from '../../../layouts/ProjectLayout.astro';
+import Section from '../../../components/content/Section.astro';
+import Figure from '../../../components/content/Figure.astro';
+import Figures from '../../../components/content/Figures.astro';
+import Steps from '../../../components/content/Steps.astro';
+import Stats from '../../../components/content/Stats.astro';
+import Cards from '../../../components/content/Cards.astro';
+import Card from '../../../components/content/Card.astro';
+import BeforeAfter from '../../../components/content/BeforeAfter.astro';
+import Media from '../../../components/Media.astro';
+import { imgdb as img } from '../../../data/imgdb';
+
+const agentParts = [
+  { kicker: 'Action', title: 'Move', src: img('6971612e1404c8e205f11a61'), notes: ['6 directions', 'Up, down, front, back, left, right'] },
+  { kicker: 'Action', title: 'Occupy', src: img('697160071404c8e205f11a15'), notes: ['2 options', 'Occupied or not'] },
+  { kicker: 'Observation', title: 'Coordinate', src: img('697160081404c8e205f11a17'), notes: ['6 directions', 'Up, down, front, back, left, right'] },
+  { kicker: 'Observation', title: 'Neighbor', src: img('6971603c1404c8e205f11a1d'), notes: ['25 + 8 + 1 positions', 'Also checks cell types'] },
+];
+
+type Rule = { mark?: '+' | '−'; text: string; code?: boolean };
+const rewards: { title: string; src: string; rules: Rule[] }[] = [
+  {
+    title: 'Neighbors underneath',
+    src: img('697160cc1404c8e205f11a45'),
+    rules: [
+      { mark: '+', text: 'AddReward(0.04f * underbuildingCell)', code: true },
+      { mark: '+', text: 'AddReward(2.0) — exactly above a cube', code: true },
+      { mark: '−', text: 'AddReward(-2.0) — not exactly above a cube', code: true },
+    ],
+  },
+  {
+    title: 'Neighbors surrounding',
+    src: img('697160c01404c8e205f11a42'),
+    rules: [
+      { mark: '+', text: 'AddReward(1.0)', code: true },
+      { mark: '−', text: 'AddReward(-1.0)', code: true },
+      { text: 'The first cube always gets the reward.' },
+    ],
+  },
+  {
+    title: 'Footprint in a residential area',
+    src: img('6971607c1404c8e205f11a22'),
+    rules: [
+      { mark: '+', text: 'AddReward(1.0)', code: true },
+      { mark: '−', text: 'AddReward(-1.0)', code: true },
+    ],
+  },
+  {
+    title: 'Footprint away from buildings',
+    src: img('6971607c1404c8e205f11a23'),
+    rules: [{ mark: '+', text: 'AddReward(distance - 2.0)', code: true }],
+  },
+  {
+    title: 'Agent on the ground',
+    src: img('697160c01404c8e205f11a3f'),
+    rules: [
+      { mark: '+', text: 'AddReward(0.4 - (0.1 * floor))', code: true },
+      { text: 'Only for the first six cubes.' },
+    ],
+  },
+  {
+    title: 'Bounding-box compactness',
+    src: img('697160c01404c8e205f11a3e'),
+    rules: [
+      { text: 'Compactness = volumeRatio − diagonalRatio', code: true },
+      { mark: '+', text: 'AddReward(Compactness > 0)', code: true },
+      { mark: '−', text: 'AddReward(Compactness < 0)', code: true },
+    ],
+  },
+];
+
+const plots = [
+  { title: 'Orthogonal plot', before: img('6971603d1404c8e205f11a20'), after: img('697160d81404c8e205f11a4e') },
+  { title: 'Non-orthogonal plot', before: img('697160af1404c8e205f11a34'), after: img('6971607e1404c8e205f11a27') },
+  { title: 'Plot without greenery', before: img('697167201404c8e205f11a6c', 'png'), after: img('697167d61404c8e205f11a70', 'gif') },
+];
+---
+
+<ProjectLayout id="rl-building-generator">
+  <Section title="Project overview">
+    <div class="prose">
+      <p>
+        This research addresses London’s housing crisis through agent-based reinforcement learning. With house prices
+        up 130% between 2005 and 2023 and the city meeting only a fraction of its housing targets, the study proposes
+        an AI-driven way to increase urban density while maintaining livability.
+      </p>
+      <p>
+        The project combines machine learning with urban planning principles, using multi-agent systems to find
+        effective densification strategies. Through site digitalization and agent behavior modeling, it builds
+        automated tools that help planners, architects and policymakers make data-driven decisions for sustainable
+        urban development.
+      </p>
+    </div>
+  </Section>
+
+  <Section title="Housing crisis in London">
+    <Stats
+      items={[
+        { value: '130%', label: 'Rise in house prices between January 2005 and January 2023.' },
+        { value: '<50%', label: 'Of the original housing expansion plan delivered in 2023.' },
+      ]}
+    />
+    <div class="prose">
+      <p>
+        London has the highest rents in the country, with acute pressure in boroughs such as Waltham Forest — which has
+        the fourth-highest overcrowding rate in Outer London, with 18% of homes overcrowded. The project targets these
+        areas for intelligent densification.
+      </p>
+    </div>
+    <Figure src={img('697161251404c8e205f11a5d')} alt="Charts of London house prices and housing delivery" caption="London’s housing crisis in data." />
+  </Section>
+
+  <Section title="Methodology">
+    <Steps
+      items={[
+        { title: 'Site digitalization', text: '2D/3D mapping, land-use analysis and building indexing.' },
+        { title: 'Agent modeling', text: 'A multi-agent system with ground agents and roof agents.' },
+        { title: 'RL training', text: '120,000-step training runs with reward optimization.' },
+        { title: 'Optimization', text: 'More density while maintaining livability.' },
+      ]}
+    />
+    <div class="prose">
+      <p>
+        The approach couples comprehensive site analysis with agent-based modeling. Digitalization captures land-use
+        patterns, building functions, solar exposure and spatial relationships, using quadtrees to identify empty
+        space.
+      </p>
+      <p>
+        The multi-agent system uses two agent types — ground agents for horizontal expansion and roof agents for
+        vertical densification — each trained through extensive simulation to maximize housing density while
+        preserving environmental quality and regulatory compliance.
+      </p>
+    </div>
+    <Figure src={img('697160bb1404c8e205f11a3b')} alt="Workflow diagram of the AI methodology" caption="Methodology workflow." />
+  </Section>
+
+  <Section title="Site digitalization">
+    <Figures cols={2}>
+      <Figure src={img('6971603d1404c8e205f11a1e')} alt="Data processing of the site" caption="Data processing." />
+      <Figure src={img('697160d61404c8e205f11a4b')} alt="Digitalized site layers" caption="Digitalized site." />
+    </Figures>
+    <Cards cols={3}>
+      <Card title="Land-use analysis" kicker="Layer 01">
+        <Media slot="media" src={img('697160d71404c8e205f11a4d')} alt="Land-use map" />
+        <ul class="marks">
+          <li>Residential areas identified</li>
+          <li>Commercial zones mapped</li>
+          <li>Green space preserved</li>
+        </ul>
+      </Card>
+      <Card title="Building index" kicker="Layer 02">
+        <Media slot="media" src={img('697160af1404c8e205f11a35')} alt="Building index map" />
+        <ul class="marks">
+          <li>Height and density mapping</li>
+          <li>Function classification</li>
+        </ul>
+      </Card>
+      <Card title="Solar analysis" kicker="Layer 03">
+        <Media slot="media" src={img('697161251404c8e205f11a5f')} alt="Ground solar radiation map" />
+        <ul class="marks">
+          <li>Ground radiation mapping</li>
+          <li>Shadow impact assessment</li>
+        </ul>
+      </Card>
+    </Cards>
+  </Section>
+
+  <Section title="The agent">
+    <Figure src={img('697160071404c8e205f11a16')} alt="Overview of the agent in its voxel environment" caption="Agent overview." />
+    <Cards cols={4}>
+      {
+        agentParts.map((part) => (
+          <Card title={part.title} kicker={part.kicker}>
+            <Media slot="media" src={part.src} alt={`${part.kicker}: ${part.title}`} />
+            <ul class="marks">
+              {part.notes.map((note) => (
+                <li>{note}</li>
+              ))}
+            </ul>
+          </Card>
+        ))
+      }
+    </Cards>
+  </Section>
+
+  <Section title="Reward functions">
+    <div class="prose">
+      <p>Each rule shapes where an agent is encouraged — or discouraged — to place the next voxel.</p>
+    </div>
+    <Cards cols={3}>
+      {
+        rewards.map((reward, index) => (
+          <Card title={reward.title} kicker={`Reward ${String(index + 1).padStart(2, '0')}`}>
+            <Media slot="media" src={reward.src} alt={`Reward rule: ${reward.title}`} />
+            <ul class="marks">
+              {reward.rules.map((rule) => (
+                <li data-mark={rule.mark}>{rule.code ? <code>{rule.text}</code> : rule.text}</li>
+              ))}
+            </ul>
+          </Card>
+        ))
+      }
+    </Cards>
+    <Card title="Mean solar index" kicker="Reward 07">
+      <ul class="marks">
+        <li><code>MeanSunIndex = Sum(sun_map) / (width * length)</code></li>
+        <li><code>SolarDelta = (MeanSunIndex − InitialMeanSunIndex) * 50</code> (negative)</li>
+        <li>A ray is cast from each ground cell toward the sun; if nothing blocks it, that cell of the sun map gains +1.</li>
+        <li>Sun vectors: hourly sunlight on the winter solstice in London.</li>
+      </ul>
+    </Card>
+    <Figure src={img('697160081404c8e205f11a18')} alt="Mean solar index map" caption="Mean solar index." />
+  </Section>
+
+  <Section title="Training results">
+    <Figures cols={3}>
+      <Figure src={img('697160b01404c8e205f11a37')} alt="Training result on an orthogonal plot" caption="Orthogonal plot." />
+      <Figure src={img('697160081404c8e205f11a19')} alt="Training result on a non-orthogonal plot" caption="Non-orthogonal plot." />
+      <Figure src={img('697160b01404c8e205f11a36')} alt="Training result of the roof agent" caption="Roof agent." />
+    </Figures>
+    <Cards cols={3}>
+      {
+        plots.map((plot) => (
+          <Card title={plot.title} kicker="Before / after">
+            <BeforeAfter before={plot.before} after={plot.after} subject={plot.title} />
+          </Card>
+        ))
+      }
+    </Cards>
+    <Cards>
+      <Card title="Training parameters" kicker="Setup">
+        <dl class="kv">
+          <div><dt>Training steps</dt><dd>120,000 per run</dd></div>
+          <div><dt>Training duration</dt><dd>~1.2 hours</dd></div>
+          <div><dt>Site dimensions</dt><dd>400 × 400 × 40 m</dd></div>
+          <div><dt>Voxel resolution</dt><dd>8 × 8 × 8</dd></div>
+        </dl>
+      </Card>
+      <Card title="Optimization targets" kicker="Goals">
+        <ul class="marks">
+          <li>Maximize housing density</li>
+          <li>Improve sunlight access</li>
+          <li>Maintain plot-ratio compliance</li>
+          <li>Preserve green space</li>
+        </ul>
+      </Card>
+    </Cards>
+  </Section>
+
+  <Section title="Case study: Waltham Forest">
+    <div class="prose">
+      <p><strong>Site selection criteria</strong></p>
+      <ul>
+        <li>Mixed land use covering residential, commercial and green space</li>
+        <li>Well-connected transport networks and road junctions</li>
+        <li>A site large enough (400 × 400 × 40 m) for comprehensive analysis</li>
+        <li>Representative of London’s broader housing challenges</li>
+      </ul>
+    </div>
+    <Figure src={img('697160f31404c8e205f11a51')} alt="Urban analysis of Waltham Forest" caption="Waltham Forest site analysis." />
+  </Section>
+
+  <Section title="Application & optimization">
+    <Figures cols={2}>
+      <Figure src={img('6971607d1404c8e205f11a24')} alt="Generated densification applied to the site" caption="Application on site." />
+      <Figure src={img('697160c11404c8e205f11a43')} alt="Optimization process analytics" caption="Optimization process." />
+    </Figures>
+    <Cards>
+      <Card title="Agent performance" kicker="Rewards">
+        <Media slot="media" src={img('6971603c1404c8e205f11a1c')} alt="Agent reward curves during training" />
+        <dl class="kv">
+          <div><dt>Ground agents</dt><dd>257.48 (smoothed)</dd></div>
+          <div><dt>Roof agents</dt><dd>−648.56 (optimizing)</dd></div>
+        </dl>
+        <p>Training duration: 1.2 hours per 120,000 steps.</p>
+      </Card>
+      <Card title="Optimization results" kicker="Outcomes">
+        <Media slot="media" src={img('697160f41404c8e205f11a53')} alt="Optimization results chart" />
+        <dl class="kv">
+          <div><dt>Density</dt><dd>Achieved</dd></div>
+          <div><dt>Sunlight access</dt><dd>Improved</dd></div>
+          <div><dt>Regulatory compliance</dt><dd>Maintained</dd></div>
+          <div><dt>Green space</dt><dd>Protected</dd></div>
+        </dl>
+      </Card>
+    </Cards>
+  </Section>
+
+  <Section title="Compared with traditional planning">
+    <div class="table-scroll span-full">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Process stage</th>
+            <th scope="col">Traditional planning</th>
+            <th scope="col">AI-driven approach</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Site analysis</td><td>Manual assessment of physical characteristics</td><td>Automated plot digitalization with 2D/3D mapping</td></tr>
+          <tr><td>Contextual studies</td><td>Surrounding architecture analyzed by hand</td><td>Comprehensive building index and distance mapping</td></tr>
+          <tr><td>Program development</td><td>Use mix defined from stakeholder input</td><td>Automated land-use optimization</td></tr>
+          <tr><td>Initial massing</td><td>Preliminary diagrams considering sun and wind</td><td>Integrated ground solar radiation mapping</td></tr>
+          <tr><td>Training / iteration</td><td>Manual refinement based on feedback</td><td>120,000-step automated training runs</td></tr>
+          <tr><td>Final production</td><td>A human designer creates the final design</td><td>AI-generated, optimized urban layout</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </Section>
+</ProjectLayout>

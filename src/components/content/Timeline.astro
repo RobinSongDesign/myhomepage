@@ -1,0 +1,79 @@
+---
+import type { Entry } from '../../data/about';
+
+interface Props {
+  entries: Entry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<ol class="timeline" role="list">
+  {
+    entries.map((entry) => (
+      <li class="row">
+        <p class="when label">{entry.when}</p>
+        <div class="what">
+          <h3 class="title">{entry.title}</h3>
+          <p class="org">
+            {entry.org}
+            {entry.place && <span class="place"> · {entry.place}</span>}
+          </p>
+          {entry.points && (
+            <ul class="marks points">
+              {entry.points.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: minmax(8.5rem, 1fr) 3fr;
+    gap: var(--space-2) var(--col-gap);
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--rule);
+  }
+
+  /* The section rule above already opens the list. */
+  .row:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .when {
+    padding-top: 0.3em;
+  }
+
+  .title {
+    font-size: var(--text-lg);
+    line-height: 1.3;
+  }
+
+  .org {
+    margin-top: var(--space-1);
+    color: var(--ink-2);
+  }
+
+  .place {
+    color: var(--ink-3);
+  }
+
+  .points {
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 40rem) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

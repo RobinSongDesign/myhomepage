@@ -1,0 +1,64 @@
+---
+/**
+ * Inline SVG icons. Line icons share one 1.5px stroke; brand marks are filled
+ * paths from Simple Icons (CC0). Replaces the 80 KB Font Awesome download.
+ */
+const icons = {
+  'arrow-up-right': { d: 'M7 17 17 7M8.5 7H17v8.5' },
+  'arrow-right': { d: 'M4 12h16m-6-6 6 6-6 6' },
+  'arrow-left': { d: 'M20 12H4m6-6-6 6 6 6' },
+  'arrow-down': { d: 'M12 4v16m-6-6 6 6 6-6' },
+  'arrow-up': { d: 'M12 20V4m-6 6 6-6 6 6' },
+  download: { d: 'M12 4v11m-5-5 5 5 5-5M5 20h14' },
+  paper: { d: 'M14 3H6v18h12V7l-4-4Zm0 0v4h4M9 13h6M9 17h6' },
+  play: { d: 'M8 5.5v13l10.5-6.5L8 5.5Z' },
+  close: { d: 'm6 6 12 12M18 6 6 18' },
+  sun: { d: 'M12 2.5v2m0 15v2M4.6 4.6l1.4 1.4m12 12 1.4 1.4M2.5 12h2m15 0h2M4.6 19.4 6 18M18 6l1.4-1.4M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z' },
+  moon: { d: 'M19.5 14.2A8 8 0 0 1 9.8 4.5a8 8 0 1 0 9.7 9.7Z' },
+  chat: { d: 'M4 5h16v11H10l-4.5 3.5V16H4V5Z' },
+  github: {
+    fill: true,
+    d: 'M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3',
+  },
+  linkedin: {
+    fill: true,
+    d: 'M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0h.01Z',
+  },
+  wechat: {
+    fill: true,
+    d: 'M8.69 2.19C3.89 2.19 0 5.48 0 9.53c0 2.21 1.17 4.2 3 5.55a.59.59 0 0 1 .21.67l-.39 1.48c-.02.07-.05.14-.05.21 0 .16.13.3.29.3a.33.33 0 0 0 .17-.06l1.9-1.11a.86.86 0 0 1 .72-.1c.89.26 1.85.4 2.84.4.27 0 .54-.02.81-.05-.86-2.58.16-4.97 1.93-6.44 1.7-1.42 3.88-1.98 5.85-1.84-.57-3.58-4.2-6.35-8.6-6.35ZM5.79 5.99a1.17 1.17 0 1 1 0 2.36 1.17 1.17 0 0 1 0-2.36Zm5.81 0a1.17 1.17 0 1 1 0 2.36 1.17 1.17 0 0 1 0-2.36Zm5.34 2.87c-1.8-.05-3.75.51-5.28 1.79-1.72 1.43-2.69 3.72-1.78 6.22.94 2.45 3.67 4.23 6.88 4.23.83 0 1.63-.12 2.37-.34a.72.72 0 0 1 .6.08l1.58.93c.05.03.09.05.14.05.13 0 .24-.11.24-.25 0-.06-.02-.12-.04-.18l-.33-1.23a.58.58 0 0 1-.02-.16.49.49 0 0 1 .2-.4C23.02 18.48 24 16.82 24 14.98c0-3.21-2.93-5.84-6.66-6.09V8.89l-.4-.03Zm-2.53 3.27a.98.98 0 1 1 0 1.97.98.98 0 0 1 0-1.97Zm4.84 0a.98.98 0 1 1 0 1.97.98.98 0 0 1 0-1.97Z',
+  },
+} as const;
+
+export type IconName = keyof typeof icons;
+
+interface Props {
+  name: IconName;
+  size?: number | string;
+  class?: string;
+  /** Give the icon an accessible name; omit when it sits next to visible text. */
+  title?: string;
+}
+
+const { name, size = '1em', class: className, title } = Astro.props;
+const icon = icons[name];
+const filled = 'fill' in icon && icon.fill;
+---
+
+<svg
+  class:list={['icon', className]}
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  fill={filled ? 'currentColor' : 'none'}
+  stroke={filled ? 'none' : 'currentColor'}
+  stroke-width={filled ? undefined : 1.5}
+  stroke-linecap={filled ? undefined : 'square'}
+  stroke-linejoin={filled ? undefined : 'miter'}
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+  focusable="false"
+>
+  {title && <title>{title}</title>}
+  <path d={icon.d} />
+</svg>

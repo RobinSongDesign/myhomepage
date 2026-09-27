@@ -1,0 +1,78 @@
+---
+/**
+ * An image with an auto-numbered caption ("Fig. 03 — …").
+ * `plate` puts drawings with transparent or white backgrounds on a light
+ * sheet, so line work stays legible in dark mode.
+ */
+import Media from '../Media.astro';
+import type { ImageSource } from '../../data/projects';
+
+interface Props {
+  src: ImageSource;
+  alt: string;
+  caption?: string;
+  /** 'full' breaks out to the page width; 'text' stays in the reading column. */
+  span?: 'full' | 'text';
+  plate?: boolean;
+  sizes?: string;
+}
+
+const { src, alt, caption, span = 'full', plate = false, sizes } = Astro.props;
+const defaultSizes = span === 'full' ? '(min-width: 90rem) 1360px, 100vw' : '(min-width: 64rem) 60vw, 100vw';
+---
+
+<figure class="fig" data-span={span} data-plate={plate || undefined}>
+  <div class="fig-media">
+    <Media src={src} alt={alt} sizes={sizes ?? defaultSizes} />
+  </div>
+  <figcaption>
+    <span class="fig-num label" aria-hidden="true"></span>
+    {caption && <span class="fig-text">{caption}</span>}
+  </figcaption>
+</figure>
+
+<style>
+  .fig {
+    counter-increment: fig;
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+    min-width: 0;
+  }
+
+  .fig-media {
+    overflow: hidden;
+    background: var(--paper-2);
+  }
+
+  .fig[data-plate] .fig-media {
+    padding: clamp(0.75rem, 2.2vw, 2.25rem);
+    background: var(--plate);
+  }
+
+  /* Never upscale small charts, and keep tall sheets within one screen. */
+  .fig-media :global(img) {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 88svh;
+    margin-inline: auto;
+  }
+
+  figcaption {
+    display: flex;
+    gap: 0.9em;
+    align-items: baseline;
+    font-size: var(--text-sm);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  .fig-num {
+    flex: none;
+  }
+
+  .fig-num::before {
+    content: 'Fig. ' counter(fig, decimal-leading-zero);
+  }
+</style>

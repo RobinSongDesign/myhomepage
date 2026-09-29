@@ -1,0 +1,78 @@
+---
+import ProjectLayout from '../../../layouts/ProjectLayout.astro';
+import Section from '../../../components/content/Section.astro';
+import Figure from '../../../components/content/Figure.astro';
+import { imgdb as img } from '../../../data/imgdb';
+
+---
+
+<ProjectLayout id="still">
+  <Section title="Project overview">
+    <div class="prose">
+      <p>
+        Exploring the application of sustainable materials and architectural structures, this project designs a
+        shelter for climbers on Jezowa Woda in Poland. It uses locally sourced cedar and green concrete — easy to build
+        and to dismantle — and emphasizes natural, functional and psychological sustainability.
+      </p>
+      <p>
+        Set on the summit, the building serves as a rest and leisure stop for mountaineers and as a viewing terrace for
+        sightseeing. The area of each functional zone follows from the needs of climbers; a sequence of formal
+        transformations then produced the final architectural shape.
+      </p>
+    </div>
+  </Section>
+
+  <Section title="Location and layout">
+    <div class="prose">
+      <p>
+        The summit of Jezowa Woda offers an excellent viewing position. The building is divided into two parts: the
+        main part, containing the restaurant, viewing terrace and accommodation, and the spring part, which provides
+        spaces for rest and relaxation.
+      </p>
+      <p>
+        The size and position of each functional area respond to the specific needs of climbers, to the special nature
+        of the mountaintop environment and to the sustainable use of resources.
+      </p>
+    </div>
+    <Figure src={img('697160a61404c8e205f11a31')} alt="Site location and layout analysis" caption="Location and layout." />
+  </Section>
+
+  <Section title="Spatial configuration">
+    <div class="prose">
+      <p>
+        The shelter includes a rest area, bathroom and bathing facilities, a locker room, a restaurant with viewing
+        terrace and a lobby. The layout follows climbers’ behavioral paths and activities, forming a smooth spatial
+        sequence from the lobby to resting, dining and viewing.
+      </p>
+      <p>
+        Through the transformation of form, the building arrives at an appearance and an internal layout that echo
+        the mountain environment, providing a practical and comfortable shelter.
+      </p>
+    </div>
+    <Figure src={img('697160081404c8e205f11a1a')} alt="Spatial configuration diagrams" caption="Spatial configuration." />
+    <Figure src={img('697160d71404c8e205f11a4c')} alt="Exterior details of the shelter" caption="Exterior details." plate />
+  </Section>
+
+  <Section title="Structural details">
+    <div class="prose">
+      <p>
+        The project employs a range of timber connections: dovetail joints for the staircase pillars, primary and
+        secondary roof-purlin overlaps, ground diagonal braces linked to concrete and metal, column-to-concrete metal
+        connections and standard beam–column overlaps — each designed for stability and durability.
+      </p>
+    </div>
+    <Figure src={img('697160cc1404c8e205f11a47')} alt="Timber joint and connection details" caption="Structural details." plate />
+  </Section>
+
+  <Section title="Material application">
+    <div class="prose">
+      <p>
+        Main materials include 20 mm veneer lumber, 20 mm plasticized glass, 30 mm fir planks, thermal insulation,
+        120 mm fir columns, 120 × 240 mm fir secondary beams and C15 360 steel–concrete beams and columns. Timber
+        elements use birch planks, concrete parts use PVC panels coated with a lime–acrylic mix, and glazing uses clear
+        acrylic panels.
+      </p>
+    </div>
+    <Figure src={img('6971610c1404c8e205f11a59')} alt="Material palette and application" caption="Material application." plate />
+  </Section>
+</ProjectLayout>

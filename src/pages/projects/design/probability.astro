@@ -1,0 +1,55 @@
+---
+import ProjectLayout from '../../../layouts/ProjectLayout.astro';
+import Section from '../../../components/content/Section.astro';
+import Figure from '../../../components/content/Figure.astro';
+import { imgdb as img } from '../../../data/imgdb';
+
+---
+
+<ProjectLayout id="probability">
+  <Section title="Project overview">
+    <div class="prose">
+      <p>
+        This project focuses on researching and applying the Wave Function Collapse (WFC) algorithm to architectural
+        design, aiming to create innovative, algorithm-driven modular layouts. The exploration is pivotal in advancing
+        architectural computation, integrating sustainability and functionality in modern urban development.
+      </p>
+      <p>
+        WFC is not a growth algorithm — it always generates a complete, valid aggregate (or no solution at all),
+        leaving no slots empty. This has important implications for design, architecture and urban planning: the
+        aggregates are not branching but rhizomatic structures; there is no overlapping and there are no untreated
+        areas.
+      </p>
+    </div>
+  </Section>
+
+  <Section title="Logical coherence">
+    <div class="prose">
+      <p>
+        When assessing different tools for discrete design, the WFC algorithm shows clear advantages in logical
+        coherence, rule complexity and design diversity. It can not only simulate natural processes but also offers
+        user interactivity and computational efficiency.
+      </p>
+    </div>
+    <Figure src={img('6971610c1404c8e205f11a5a')} alt="Diagram comparing discrete design tools" caption="Comparing tools for discrete design." />
+  </Section>
+
+  <Section title="Modules and rules">
+    <div class="prose">
+      <p>
+        The project developed various module types, including residential modules (double rooms, single rooms,
+        offices), connection modules (platforms, elevators, staircases) and connectors in various directions. For a
+        given slot shape, the algorithm identifies the current condition of the slots and provides a solution for it.
+      </p>
+    </div>
+    <Figure src={img('697160bc1404c8e205f11a3d')} alt="Catalog of residential and connection modules" caption="Module catalog and adjacency rules." />
+  </Section>
+
+  <Section title="Master plan">
+    <Figure src={img('6971608c1404c8e205f11a29')} alt="Master plan and floor plans" caption="Master plan." plate />
+  </Section>
+
+  <Section title="Elevations & sections">
+    <Figure src={img('6971608d1404c8e205f11a2d')} alt="Elevations and sections of the building" caption="Elevations and sections." plate />
+  </Section>
+</ProjectLayout>

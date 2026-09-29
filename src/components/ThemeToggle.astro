@@ -1,0 +1,76 @@
+---
+import Icon from './Icon.astro';
+---
+
+<button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">
+  <span class="sr-only">Dark mode</span>
+  <Icon name="moon" class="to-dark" size={18} />
+  <Icon name="sun" class="to-light" size={18} />
+</button>
+
+<script>
+  const root = document.documentElement;
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+
+  const readSaved = () => {
+    try {
+      return localStorage.getItem('theme');
+    } catch {
+      return null;
+    }
+  };
+
+  const sync = () => {
+    const dark = root.dataset.theme === 'dark';
+    buttons.forEach((button) => button.setAttribute('aria-pressed', String(dark)));
+  };
+
+  buttons.forEach((button) =>
+    button.addEventListener('click', () => {
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem('theme', next);
+      } catch {}
+      sync();
+    }),
+  );
+
+  // Follow the OS setting until the visitor makes an explicit choice.
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+    if (readSaved()) return;
+    root.dataset.theme = event.matches ? 'dark' : 'light';
+    sync();
+  });
+
+  sync();
+</script>
+
+<style>
+  .theme-toggle {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-right: -0.6rem;
+    color: var(--ink-2);
+    transition: color var(--dur-1);
+  }
+
+  .theme-toggle:hover {
+    color: var(--accent-ink);
+  }
+
+  .theme-toggle :global(.icon) {
+    grid-area: 1 / 1;
+  }
+
+  .theme-toggle :global(.to-light),
+  :global([data-theme='dark']) .theme-toggle :global(.to-dark) {
+    display: none;
+  }
+
+  :global([data-theme='dark']) .theme-toggle :global(.to-light) {
+    display: block;
+  }
+</style>

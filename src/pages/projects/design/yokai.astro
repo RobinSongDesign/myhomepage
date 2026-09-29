@@ -1,0 +1,117 @@
+---
+import ProjectLayout from '../../../layouts/ProjectLayout.astro';
+import Section from '../../../components/content/Section.astro';
+import Figure from '../../../components/content/Figure.astro';
+import Figures from '../../../components/content/Figures.astro';
+import { imgdb as img } from '../../../data/imgdb';
+
+---
+
+<ProjectLayout id="yokai-hall">
+  <Section title="Project overview">
+    <div class="prose">
+      <p>
+        This project takes inspiration from Le Corbusier’s Cubist approach to form and space. Situated in Chiyoda,
+        Tokyo, the Traditional Performing Arts Information Center is not only a building but a nexus between past and
+        present, the static and the dynamic.
+      </p>
+      <p>
+        Drawing on Japan’s traditional performing arts — particularly the mystical <em>Yokai</em> — the project
+        transforms cultural symbols into unique spatial experiences, respecting Japanese tradition while speaking a
+        modern architectural language.
+      </p>
+    </div>
+  </Section>
+
+  <Section title="Creative process & site analysis">
+    <div class="prose">
+      <p>
+        I began by exploring the intriguing aspects of Japan’s traditional performing arts, particularly the Yokai.
+        Using hands-on collage techniques, I transformed these elements into distinct symbols, setting the stage for a
+        form language deeply connected to cultural shapes and motifs.
+      </p>
+      <p>
+        The center sits opposite the National Theater’s main entrance on Uchibori-dori, on the National Theater-dori
+        side. Walking along National Theater-dori from Hanzomon, a gentle slope designed to avoid steps leads up into
+        the theater grounds.
+      </p>
+    </div>
+    <Figure src={img('697160cd1404c8e205f11a49')} alt="Collage studies and site analysis" caption="Collage studies and site analysis." />
+  </Section>
+
+  <Section title="Spatial composition">
+    <div class="prose">
+      <p>
+        The building comprises a main exhibition hall, equipment room, circulation tube, secondary exhibition hall,
+        restrooms, external entrance, archive and multimedia hall. Personal readings of the two-dimensional studies
+        helped morph these concepts into three-dimensional forms, merging traditional narratives with spatial
+        dynamics.
+      </p>
+    </div>
+    <Figures cols={2}>
+      <Figure src={img('697160cb1404c8e205f11a44')} alt="Exploded axonometric of the program" caption="Exploded program diagram." />
+      <Figure src={img('697160a61404c8e205f11a30')} alt="Exploded concept model" caption="Exploded concept." />
+    </Figures>
+  </Section>
+
+  <Section title="Form inspiration & materials">
+    <div class="prose">
+      <p>
+        Inspired by Japan’s traditional arts and the tales of Yokai, the space melds simple shapes with modern design.
+        The central circulation shaft takes the form of a Reuleaux triangle, a shape that complements the overlapping
+        structures and turns flat studies into a vibrant three-dimensional space. Natural light filters in, casting
+        gentle shadows and crafting a serene, welcoming atmosphere.
+      </p>
+      <p>
+        Exterior materials include brushed aluminum panels on a light-steel truss. Inside, wood-grain aluminum panels
+        line the space; walls combine cement fiberboard, white emulsion paint and a light-steel structure.
+      </p>
+    </div>
+    <Figures cols={2}>
+      <Figure src={img('697160bb1404c8e205f11a3c')} alt="Form inspiration studies" caption="Form inspiration." plate />
+      <Figure src={img('6971610b1404c8e205f11a56')} alt="Material studies" caption="Materials." plate />
+    </Figures>
+  </Section>
+
+  <Section title="Le Corbusier’s influence">
+    <div class="prose">
+      <p>
+        Building on Cubism, Le Corbusier pioneered Purism. He believed in the deconstruction and abstraction of natural
+        elements — that everything can be abstracted into regular, orderly patterns. This perspective shaped his
+        architecture, integrating form into space and, above all, using natural light to craft beauty.
+      </p>
+    </div>
+    <Figures cols={2}>
+      <Figure src={img('697160c01404c8e205f11a41')} alt="Analysis of Le Corbusier’s spatial principles" caption="Reading Le Corbusier I." plate />
+      <Figure src={img('697161251404c8e205f11a60')} alt="Analysis of Le Corbusier’s use of light and form" caption="Reading Le Corbusier II." plate />
+    </Figures>
+  </Section>
+
+  <Section title="Structure and texture">
+    <div class="prose">
+      <p>
+        Intuitively, people find it hard to see a building as beautiful if its structure seems illogical, however much
+        it is embellished — it still feels like a castle in the air. Structure is like the human skeleton: the depth of
+        a face depends on the shape of the skull. So, in my search for form, I delved deep into the design of the outer
+        shell: brushed aluminum panels form a coherent structural framework outside, while wood-grain metal panels
+        inside evoke transparency and tranquility.
+      </p>
+    </div>
+    <Figure src={img('697160cc1404c8e205f11a46')} alt="Interior of the exhibition hall" caption="Structure and texture." />
+  </Section>
+
+  <Section title="Reflections on spatial form">
+    <div class="prose">
+      <p>
+        The project raised questions about spatial form. What defines a logical space? Which shapes possess aesthetic
+        appeal? How can one balance the beauty of form with the practicality of space?
+      </p>
+      <p>
+        After many experiments with different forms, I found it hard to convey precisely the spatial experience I
+        envisioned. That was when I realized that for an aesthetic form to blend into a tangible space, a sound
+        structural foundation is paramount.
+      </p>
+    </div>
+    <Figure src={img('6971608d1404c8e205f11a2c')} alt="Sketches questioning spatial form" caption="Questions on spatial form." />
+  </Section>
+</ProjectLayout>

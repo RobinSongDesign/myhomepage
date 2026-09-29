@@ -1,0 +1,145 @@
+---
+import Icon from './Icon.astro';
+import Media from './Media.astro';
+import { projectNumber, type Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+  shape?: 'portrait' | 'landscape';
+}
+
+const { project, shape = 'portrait' } = Astro.props;
+const sizes =
+  shape === 'portrait'
+    ? '(min-width: 48rem) 33vw, (min-width: 40rem) 50vw, 100vw'
+    : '(min-width: 48rem) 50vw, 100vw';
+---
+
+<a class="card" href={project.href} data-shape={shape} data-reveal>
+  <div class="media">
+    <Media src={project.cover} alt="" sizes={sizes} />
+  </div>
+  <div class="caption">
+    <span class="num label">{projectNumber(project)}</span>
+    <div class="text">
+      <h3 class="title">
+        {project.title}
+        <Icon name="arrow-up-right" class="arrow" />
+      </h3>
+      <p class="summary">{project.summary}</p>
+    </div>
+  </div>
+</a>
+
+<style>
+  .card {
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
+  }
+
+  .media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--paper-2);
+  }
+
+  .card[data-shape='landscape'] .media {
+    aspect-ratio: 3 / 2;
+  }
+
+  .media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 900ms var(--ease-out);
+  }
+
+  /* Corner ticks, like crop marks on a drawing sheet. */
+  .media::before,
+  .media::after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    width: 14px;
+    height: 14px;
+    border-color: var(--accent);
+    border-style: solid;
+    opacity: 0;
+    transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out);
+  }
+
+  .media::before {
+    top: 10px;
+    left: 10px;
+    border-width: 1px 0 0 1px;
+    transform: translate(4px, 4px);
+  }
+
+  .media::after {
+    right: 10px;
+    bottom: 10px;
+    border-width: 0 1px 1px 0;
+    transform: translate(-4px, -4px);
+  }
+
+  .card:hover .media :global(img),
+  .card:focus-visible .media :global(img) {
+    transform: scale(1.035);
+  }
+
+  .card:hover .media::before,
+  .card:hover .media::after,
+  .card:focus-visible .media::before,
+  .card:focus-visible .media::after {
+    opacity: 1;
+    transform: none;
+  }
+
+  .caption {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    gap: var(--space-2);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--rule);
+  }
+
+  .num {
+    padding-top: 0.28em;
+  }
+
+  .title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4em;
+    font-size: var(--text-lg);
+    line-height: 1.25;
+    transition: color var(--dur-1);
+  }
+
+  .title :global(.arrow) {
+    flex: none;
+    width: 0.8em;
+    height: 0.8em;
+    color: var(--ink-3);
+    transition: transform var(--dur-2) var(--ease-out), color var(--dur-1);
+  }
+
+  .card:hover .title {
+    color: var(--accent-ink);
+  }
+
+  .card:hover .title :global(.arrow) {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+
+  .summary {
+    margin-top: var(--space-1);
+    max-width: 44ch;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+</style>

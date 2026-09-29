@@ -1,0 +1,262 @@
+---
+import ProjectLayout from '../../../layouts/ProjectLayout.astro';
+import Section from '../../../components/content/Section.astro';
+import Figure from '../../../components/content/Figure.astro';
+import Embed from '../../../components/content/Embed.astro';
+import { imgdb as img } from '../../../data/imgdb';
+
+const params = [
+  { id: 'viscosity', label: 'Viscosity', step: 0.001, value: 0.5 },
+  { id: 'pressure', label: 'Pressure', step: 0.001, value: 0.25 },
+  { id: 'radius', label: 'Radius', step: 0.01, value: 0.5 },
+  { id: 'velocity_dissipation', label: 'Velocity dissipation', step: 0.001, value: 0.25 },
+  { id: 'density_dissipation', label: 'Density dissipation', step: 0.001, value: 0.25 },
+];
+---
+
+<ProjectLayout id="stableshape">
+  <div slot="cover" class="sim" data-sim>
+    <canvas id="fluidsim_canvas" aria-label="Interactive fluid simulation. Click and drag to stir the fluid."></canvas>
+
+    <p class="sim-caption label">Fig. 00 — Stable Fluids in WebGL2 · drag to stir</p>
+
+    <details class="sim-params">
+      <summary class="label">Parameters</summary>
+      <form id="param_form" onsubmit="return false">
+        {
+          params.map((p) => (
+            <label class="param">
+              <span>{p.label}</span>
+              <input type="range" id={p.id} min="0" max="1" step={p.step} value={p.value} />
+            </label>
+          ))
+        }
+        <fieldset id="display_radio">
+          <legend>Display</legend>
+          <label><input type="radio" name="display" value="dye" checked /> Dye</label>
+          <label><input type="radio" name="display" value="velocity" /> Velocity</label>
+          <label><input type="radio" name="display" value="pressure" /> Pressure</label>
+        </fieldset>
+      </form>
+    </details>
+
+    <p class="sim-fallback">This interactive demo needs WebGL2, which isn’t available in this browser.</p>
+  </div>
+
+  <Section title="In action">
+    <div class="prose">
+      <p>
+        StableShape is a Grasshopper plugin that turns fluid simulation into form. The live figure above runs the same
+        Stable Fluids solver in your browser; below, the plugin at work inside Grasshopper.
+      </p>
+    </div>
+    <Embed
+      src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7340807801595641858?compact=1"
+      title="StableShape demo video on LinkedIn"
+      ratio="16 / 10"
+    />
+  </Section>
+
+  <Section title="Algorithm framework">
+    <div class="prose">
+      <p>
+        The core of StableShape is two classes: <code>StableFluid</code> and <code>ParticleSystem</code>. StableFluid
+        manages the velocity and density fields, resolving the Navier–Stokes equations through diffusion, advection and
+        pressure projection — the steps that keep the simulation stable.
+      </p>
+      <p>
+        ParticleSystem operates on a mesh of particles connected by springs, handling tension and mesh
+        reconstruction. By treating mesh vertices as particles carried by the stable velocity field, the framework
+        achieves realistic fluid behavior.
+      </p>
+    </div>
+    <Figure src={img('697160961404c8e205f11a2e')} alt="Diagram of the StableFluid and ParticleSystem classes" caption="Algorithm framework." plate />
+  </Section>
+
+  <Section title="From field to morphology">
+    <div class="prose">
+      <p>
+        The project explores the transformation from scalar fields to morphology. In physics, a field is a quantity —
+        scalar, vector or tensor — with a value at every point in space and time. Here the scalar field is fluid
+        density.
+      </p>
+      <p>
+        In three dimensions, the level sets of a scalar field are two-dimensional: iso-surfaces. These surfaces can
+        represent a three-dimensional fluid in a way a 2D height field cannot — each one is a closed body, the
+        three-dimensional equivalent of a contour line.
+      </p>
+    </div>
+  </Section>
+
+  <Section title="Morphogenesis methods">
+    <div class="prose">
+      <p>
+        StableShape offers two ways to generate form. The VDB method uses the Dendro plugin to convert density points
+        into volumes; the mesh method uses the particle system to deform meshes. Both evolve complex fluid forms from
+        simple primitives.
+      </p>
+      <p>
+        Everything runs inside Grasshopper — grid construction, VDB processing, the StableFluid solver and the
+        ParticleSystem solver — so designers can manipulate and watch forms evolve in real time.
+      </p>
+    </div>
+    <Figure src={img('697161351404c8e205f11a62')} alt="Comparison of the VDB and mesh morphogenesis methods" caption="VDB and mesh methods." plate />
+  </Section>
+
+  <Section title="Implementation">
+    <div class="prose">
+      <p>
+        The fluid solver runs in four stages: initialization, adding density, updating the velocity field and updating
+        the density field. At each time step it resolves the Navier–Stokes equations through diffusion, projection and
+        advection, keeping the simulation physically plausible and numerically stable.
+      </p>
+      <p>
+        The mesh solver drives the particle system: mesh topology, particle movement, tension and reconstruction.
+        Together they generate fluid forms that evolve over time, opening new possibilities for architectural design
+        exploration.
+      </p>
+    </div>
+    <Figure src={img('697160a71404c8e205f11a32')} alt="Grasshopper definition showing the implementation process" caption="Implementation process." plate />
+  </Section>
+</ProjectLayout>
+
+<script>
+  import '../../../scripts/stable-fluids.js';
+</script>
+
+<style>
+  .sim {
+    position: relative;
+    height: min(88svh, 56.25vw);
+    min-height: 24rem;
+    background: #050505;
+    color: #ecebe6;
+    overflow: hidden;
+  }
+
+  #fluidsim_canvas {
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+    /* Vertical swipes still scroll the page on touch screens. */
+    touch-action: pan-y;
+  }
+
+  .sim-caption {
+    position: absolute;
+    left: var(--gutter);
+    bottom: var(--space-4);
+    color: #b0afa8;
+    pointer-events: none;
+  }
+
+  .sim-params {
+    position: absolute;
+    right: var(--gutter);
+    bottom: var(--space-3);
+    width: min(19rem, calc(100% - 2 * var(--gutter)));
+    color: #ecebe6;
+  }
+
+  .sim-params summary {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5em;
+    padding-block: var(--space-2);
+    color: #ecebe6;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .sim-params summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .sim-params summary::after {
+    content: '+';
+    color: var(--accent);
+  }
+
+  .sim-params[open] summary::after {
+    content: '−';
+  }
+
+  #param_form {
+    display: grid;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+    padding: var(--space-4);
+    border: 1px solid rgb(255 255 255 / 0.18);
+    background: rgb(5 5 5 / 0.72);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    font-size: var(--text-xs);
+  }
+
+  .param {
+    display: grid;
+    gap: var(--space-1);
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+
+  .param input {
+    width: 100%;
+    accent-color: var(--accent);
+  }
+
+  fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding: var(--space-3) 0 0;
+    border: 0;
+    border-top: 1px solid rgb(255 255 255 / 0.18);
+    font-family: var(--font-mono);
+  }
+
+  legend {
+    float: left;
+    width: 100%;
+    margin-bottom: var(--space-1);
+    color: #8a8983;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+  }
+
+  fieldset label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+  }
+
+  fieldset input {
+    accent-color: var(--accent);
+  }
+
+  .sim-fallback {
+    display: none;
+    position: absolute;
+    inset: 0;
+    place-content: center;
+    padding: var(--gutter);
+    text-align: center;
+    color: #b0afa8;
+  }
+
+  .sim[data-unsupported] .sim-fallback {
+    display: grid;
+  }
+
+  .sim[data-unsupported] .sim-params,
+  .sim[data-unsupported] .sim-caption {
+    display: none;
+  }
+
+  @media (max-width: 40rem) {
+    .sim-caption {
+      top: var(--space-4);
+      bottom: auto;
+    }
+  }
+</style>

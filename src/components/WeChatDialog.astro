@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import qr from '../assets/brand/wechat-qr.jpg';
+---
+
+<dialog class="dialog" data-wechat-dialog aria-labelledby="wechat-title">
+  <form method="dialog" class="dialog-inner">
+    <div class="dialog-head">
+      <p class="label" id="wechat-title">WeChat</p>
+      <button class="close" type="submit" aria-label="Close">
+        <Icon name="close" size={18} />
+      </button>
+    </div>
+    <Image src={qr} alt="WeChat QR code for Robin Song" width={280} densities={[1, 2]} quality={90} />
+    <p class="hint">Scan with WeChat to add me.</p>
+  </form>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-wechat-dialog]');
+  if (dialog) {
+    document.addEventListener('click', (event) => {
+      const trigger = (event.target as Element).closest('[data-open-wechat]');
+      if (!trigger) return;
+      event.preventDefault();
+      dialog.showModal();
+    });
+    // Clicking the backdrop (the dialog element itself) closes it.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  }
+</script>
+
+<style>
+  .dialog {
+    width: min(22rem, calc(100vw - 2 * var(--gutter)));
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--plate);
+    color: #161615;
+  }
+
+  .dialog::backdrop {
+    background: var(--scrim);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+  }
+
+  .dialog[open] {
+    animation: dialog-in var(--dur-2) var(--ease-out);
+  }
+
+  .dialog-inner {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-5);
+  }
+
+  .dialog-inner :global(img) {
+    width: 100%;
+  }
+
+  .dialog-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .dialog .label {
+    color: #6f6e68;
+  }
+
+  .close {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin: -0.5rem -0.5rem -0.5rem 0;
+    color: #4d4c47;
+  }
+
+  .close:hover {
+    color: #c23b00;
+  }
+
+  .hint {
+    font-size: var(--text-sm);
+    color: #4d4c47;
+  }
+
+  @keyframes dialog-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+</style>

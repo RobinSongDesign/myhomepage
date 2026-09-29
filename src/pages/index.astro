@@ -1,0 +1,335 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FieldCanvas from '../components/FieldCanvas.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+import { categories, projects } from '../data/projects';
+
+const facts = [
+  { label: 'Currently', value: site.currently },
+  { label: 'Studied', value: site.studied },
+  { label: 'Based in', value: site.basedIn },
+];
+---
+
+<BaseLayout>
+  <section class="hero" aria-labelledby="hero-name">
+    <FieldCanvas class="hero-field" />
+
+    <div class="wrap hero-grid">
+      <p class="label hero-caption">Fig. 00 — Vector field, live.<span class="pointer-hint"> Move your cursor.</span></p>
+
+      <h1 class="hero-name" id="hero-name">Robin<br />Song</h1>
+
+      <div class="hero-side">
+        <p class="lede">
+          Computational designer &amp; developer working where architecture meets code — fluid simulation, machine
+          learning and form-finding for design.
+        </p>
+        <div class="hero-actions">
+          <a class="btn" href="#work">View work <Icon name="arrow-down" /></a>
+          <a class="btn btn--ghost" href={site.cv} download="CV_Robin_Song.pdf">Download CV <Icon name="download" /></a>
+        </div>
+      </div>
+
+      <dl class="hero-facts">
+        {
+          facts.map((fact) => (
+            <div>
+              <dt class="label">{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section id="work" class="work wrap" aria-labelledby="work-title">
+    <header class="work-head">
+      <h2 class="label" id="work-title">Selected work</h2>
+      <p class="label">{String(projects.length).padStart(2, '0')} projects</p>
+    </header>
+
+    {
+      categories.map((category) => {
+        const items = projects.filter((p) => p.category === category.title);
+        const shape = category.title === 'Design' ? 'landscape' : 'portrait';
+        return (
+          <div class="group">
+            <div class="group-head" data-reveal>
+              <h3 class="group-title">{category.title}</h3>
+              <p class="group-blurb">{category.blurb}</p>
+              <p class="label group-count">({String(items.length).padStart(2, '0')})</p>
+            </div>
+            <div class="cards" data-shape={shape}>
+              {items.map((project) => (
+                <ProjectCard project={project} shape={shape} />
+              ))}
+            </div>
+          </div>
+        );
+      })
+    }
+  </section>
+
+  <section class="profile wrap" aria-labelledby="profile-title">
+    <h2 class="label" id="profile-title">Profile</h2>
+    <p class="profile-text" data-reveal>
+      Trained in landscape architecture at Beijing Forestry University and in architectural computation at UCL, I build
+      design tools, simulations and learning systems — with a particular interest in how algorithms and mechanics give
+      rise to form.
+    </p>
+    <div class="profile-links" data-reveal>
+      <a class="btn btn--ghost" href="/about.html">About me <Icon name="arrow-right" /></a>
+      <a class="btn btn--ghost" href={site.cv} download="CV_Robin_Song.pdf">CV <Icon name="download" /></a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Hero -------------------------------------------------------------------- */
+  .hero {
+    position: relative;
+    display: flex;
+    min-height: min(calc(100svh - var(--header-h)), 60rem);
+    border-bottom: 1px solid var(--rule);
+    overflow: hidden;
+  }
+
+  .hero :global(.hero-field) {
+    position: absolute;
+    inset: 0;
+    -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 96%);
+    mask-image: linear-gradient(to bottom, #000 45%, transparent 96%);
+  }
+
+  .hero-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto 1fr auto auto auto;
+    column-gap: var(--col-gap);
+    padding-block: var(--space-6) var(--space-8);
+  }
+
+  .hero-caption {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: end;
+    padding: 0.2em 0.5em;
+    background: var(--paper);
+  }
+
+  @media (hover: none) {
+    .pointer-hint {
+      display: none;
+    }
+  }
+
+  .hero-name {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    align-self: end;
+    margin-bottom: var(--space-8);
+    font-size: var(--text-display);
+    font-weight: 500;
+    line-height: 0.84;
+    letter-spacing: var(--tracking-display);
+  }
+
+  .hero-side {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    display: grid;
+    gap: var(--space-6);
+    margin-bottom: var(--space-10);
+  }
+
+  .hero-side .lede {
+    max-width: 30ch;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .hero-facts {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .hero-facts > div {
+    display: grid;
+    gap: var(--space-1);
+    padding-top: var(--space-3);
+  }
+
+  .hero-facts dd {
+    font-size: var(--text-sm);
+  }
+
+  @media (min-width: 64rem) {
+    .hero-name {
+      grid-column: 1 / span 8;
+      grid-row: 3 / span 2;
+      margin-bottom: var(--space-10);
+    }
+
+    .hero-side {
+      grid-column: 9 / -1;
+      grid-row: 4;
+      align-self: end;
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .hero {
+      min-height: 0;
+    }
+
+    .hero-grid {
+      padding-top: 38svh;
+    }
+
+    .hero-caption {
+      /* Clearing the grid placement makes the padding box, not row 1, the containing block. */
+      grid-area: auto;
+      position: absolute;
+      top: var(--space-4);
+      right: var(--gutter);
+    }
+
+    .hero-facts {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-facts > div {
+      grid-template-columns: 7rem 1fr;
+      padding-block: var(--space-2);
+      border-bottom: 1px solid var(--rule);
+    }
+  }
+
+  /* Work -------------------------------------------------------------------- */
+  .work {
+    padding-top: var(--section);
+  }
+
+  .work-head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+  }
+
+  .group + .group {
+    margin-top: var(--section);
+  }
+
+  .group-head {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    row-gap: var(--space-2);
+    align-items: baseline;
+    padding-top: var(--space-4);
+    margin-bottom: var(--space-10);
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .group-title {
+    grid-column: 1 / span 6;
+    font-size: var(--text-2xl);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .group-blurb {
+    grid-column: 7 / span 4;
+    color: var(--ink-2);
+  }
+
+  .group-count {
+    grid-column: 11 / -1;
+    justify-self: end;
+  }
+
+  .cards {
+    display: grid;
+    gap: var(--space-12) var(--col-gap);
+  }
+
+  @media (min-width: 40rem) {
+    .cards[data-shape='portrait'] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .cards[data-shape='portrait'] {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .cards[data-shape='landscape'] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .group-title {
+      grid-column: 1 / span 9;
+    }
+
+    .group-count {
+      grid-column: 10 / -1;
+      grid-row: 1;
+    }
+
+    .group-blurb {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* Profile ----------------------------------------------------------------- */
+  .profile {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    row-gap: var(--space-8);
+    padding-top: var(--section);
+  }
+
+  .profile > .label {
+    grid-column: 1 / span 3;
+    padding-top: 0.6em;
+  }
+
+  .profile-text {
+    grid-column: 4 / -1;
+    max-width: 34ch;
+    font-size: var(--text-2xl);
+    line-height: 1.22;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .profile-links {
+    grid-column: 4 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  @media (max-width: 47.99rem) {
+    .profile > .label,
+    .profile-text,
+    .profile-links {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

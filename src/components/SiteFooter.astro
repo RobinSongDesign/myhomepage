@@ -1,0 +1,141 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="cta" data-reveal>
+      <p class="label">Contact</p>
+      <p class="cta-line">Interested in my work, or in working together? Let’s talk.</p>
+      <a class="cta-email" href={`mailto:${site.email}`}>
+        {site.email}
+        <Icon name="arrow-up-right" class="cta-arrow" />
+      </a>
+    </div>
+
+    <div class="meta">
+      <ul class="links" role="list">
+        <li>
+          <a href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">
+            <Icon name="linkedin" /> LinkedIn
+          </a>
+        </li>
+        <li>
+          <a href={site.socials.github} target="_blank" rel="noopener noreferrer">
+            <Icon name="github" /> GitHub
+          </a>
+        </li>
+        <li>
+          <button type="button" data-open-wechat>
+            <Icon name="wechat" /> WeChat
+          </button>
+        </li>
+        <li>
+          <a href={site.cv} download="CV_Robin_Song.pdf">
+            <Icon name="download" /> CV
+          </a>
+        </li>
+      </ul>
+
+      <p class="label">© {year} {site.name} · {site.basedIn}</p>
+      <a class="label to-top" href="#main">Back to top <Icon name="arrow-up" /></a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--section);
+    padding-block: var(--space-16) var(--space-8);
+    border-top: 1px solid var(--rule);
+  }
+
+  .cta {
+    display: grid;
+    gap: var(--space-4);
+    padding-bottom: var(--space-16);
+  }
+
+  .cta-line {
+    max-width: 30ch;
+    font-size: var(--text-xl);
+    line-height: 1.3;
+    color: var(--ink-2);
+  }
+
+  .cta-email {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+    width: fit-content;
+    max-width: 100%;
+    font-size: var(--text-3xl);
+    font-weight: 500;
+    letter-spacing: var(--tracking-display);
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+    transition: color var(--dur-1);
+  }
+
+  .cta-email :global(.cta-arrow) {
+    flex: none;
+    width: 0.6em;
+    height: 0.6em;
+    color: var(--accent);
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .cta-email:hover {
+    color: var(--accent-ink);
+  }
+
+  .cta-email:hover :global(.cta-arrow) {
+    transform: translate(0.08em, -0.08em);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--rule);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
+    margin-right: auto;
+  }
+
+  .links a,
+  .links button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding-block: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--ink-2);
+    transition: color var(--dur-1);
+  }
+
+  .links a:hover,
+  .links button:hover {
+    color: var(--ink);
+  }
+
+  .to-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    transition: color var(--dur-1);
+  }
+
+  .to-top:hover {
+    color: var(--ink);
+  }
+</style>

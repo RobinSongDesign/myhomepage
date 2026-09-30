@@ -41,7 +41,9 @@ src/
     global.css       基础样式和少量通用类
   pages/             一个文件 = 一个页面，路径与旧站完全一致
 public/              原样发布：PDF、zip、favicon、botdata.json
-scripts/deploy.sh    服务器上的一键部署
+scripts/
+  publish.sh         在本机构建并发布到服务器（日常用这个）
+  deploy.sh          在服务器上构建并替换（需要服务器有 Node）
 archive/             旧站里没被任何页面引用的原图，不参与构建
 ```
 
@@ -51,67 +53,49 @@ archive/             旧站里没被任何页面引用的原图，不参与构�
 2. 新建 `src/pages/projects/<code|design>/<Name>.astro`，用 `ProjectLayout` 包住内容，正文用 `Section`、`Figure` 等组件拼。章节号和图号（Fig. 01…）由 CSS 计数器自动生成。
 3. 本地图片放 `src/assets/`，构建时会自动转 WebP 并生成多尺寸；图床图片可以把宽高登记到 `image-sizes.json`。
 
-## 部署（Ubuntu + nginx，在 SSH 终端里操作）
+## 部署（robinsong.top：Ubuntu + nginx）
 
-nginx 直接托管仓库里的 `dist/`。下面假设服务器上的仓库就是网站目录 `/www/wwwroot/robinsong.top`，路径按实际情况替换。
+nginx 直接托管服务器上仓库 `/home/ubuntu/myhomepage` 里的 `dist/`，站点配置在 `/etc/nginx/sites-available/myhomepage`（2026-10-01 从 React 版切换过来，切换前的配置备份为 `myhomepage.bak-20261001-react`，React 版文件仍在 `/home/ubuntu/myhomepage-react/`）。
 
-### 日常更新
+### 日常更新（在本机执行）
+
+服务器没有装 Node、内存也紧，所以在本机构建再上传：
 
 ```bash
-cd /www/wwwroot/robinsong.top && ./scripts/deploy.sh
+./scripts/publish.sh
 ```
 
-脚本会拉取最新代码、安装依赖，先构建到临时目录再整体替换 `dist/`，更新时网站不会出现空白。上一版保留在 `.dist-prev/`，出问题时回滚：`mv dist .dist-bad && mv .dist-prev dist`。
+脚本只发布干净且最新的 `main`：构建、上传到服务器的临时目录后整体替换 `dist/`（更新时网站不会空白）、同步服务器上的仓库；`botdata.json` 变了会自动重启聊天服务。上一版保留在服务器的 `.dist-prev/`，回滚：在服务器上 `cd /home/ubuntu/myhomepage && mv dist .dist-bad && mv .dist-prev dist`。
 
-### 第一次切换（只做一次）
+以后如果服务器装了 Node ≥ 22.12，也可以直接在服务器上运行 `./scripts/deploy.sh`。
 
-1. **Node ≥ 22.12**：先用 `node -v` 看版本。不够的话装 nvm（不影响系统自带的 Node）：
+### AI 聊天
 
-   ```bash
-   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | bash
-   ```
+- 页面请求同域名的 `/api/chat`，nginx 把 `/api/` 转发给本机 8801 端口的 `portfolio-chat.service`（代码在 `/home/ubuntu/myhomepage-bridge/chat_api.py`）。
+- 系统提示词由服务器根据仓库里的 `public/files/botdata.json` 生成，浏览器只发送对话内容。访客不需要访问密钥（`config.json` 里 `"require_access_key": false`），每个 IP 每天最多 50 条，另有按分钟的限速。
+- 网站专用的 DeepSeek Key 写在 `/home/ubuntu/myhomepage-bridge/chat.env` 的 `CHAT_API_KEY=` 后面（文件权限 600），然后 `sudo systemctl restart portfolio-chat`。留空时沿用 `~/.hermes/.env` 里的 Key。
 
-   重新打开终端，执行 `nvm install 24`。之后部署脚本会按 `.nvmrc` 自动切到 Node 24。
+### nginx 配置要点
 
-2. **改好 nginx 配置，先不生效**。找到站点配置文件：
+重新搭建时参考（完整配置以服务器上的文件为准）：
 
-   ```bash
-   sudo nginx -T 2>/dev/null | grep -nE "configuration file|server_name|root"
-   ```
+```nginx
+root /home/ubuntu/myhomepage/dist;
+index index.html;
+error_page 404 /404.html;
 
-   在 robinsong.top 的 `server { … }` 里把 `root` 改到 `dist`，并补上下面几行：
+# certbot 用 webroot 方式把验证文件写在仓库根目录，不在 dist/ 里
+location ^~ /.well-known/acme-challenge/ { root /home/ubuntu/myhomepage; }
 
-   ```nginx
-   root /www/wwwroot/robinsong.top/dist;
-   index index.html;
-   error_page 404 /404.html;
+# 网站 AI 聊天
+location ^~ /api/ { proxy_pass http://127.0.0.1:8801; }
 
-   # 多页静态站：先找文件，再找同名 .html（/about 也能打开 about.html），都没有就返回 404 页
-   location / {
-       try_files $uri $uri.html $uri/ =404;
-   }
+# 带哈希的构建产物可以长期缓存
+location ^~ /_astro/ { expires 1y; add_header Cache-Control "public, immutable"; }
 
-   # 证书续期的验证文件写在仓库根目录，不在 dist/ 里（已有同类 location 就保留原来的）
-   location ^~ /.well-known/acme-challenge/ {
-       root /www/wwwroot/robinsong.top;
-   }
+# 多页静态站：先找文件，再找同名 .html（/about → about.html），都没有就 404。
+# 不要用单页应用那种回退到 /index.html 的写法。
+location / { try_files $uri $uri.html $uri/ =404; add_header Cache-Control "no-cache"; }
+```
 
-   # /_astro/ 下的文件名带哈希，可以长期缓存
-   location ^~ /_astro/ {
-       expires 1y;
-   }
-   ```
-
-   如果原来有单页应用那种 `try_files … /index.html` 的写法，要换成上面的 `location /`，否则所有不存在的地址都会返回首页。
-
-3. **拉取、构建、生效**，一条命令完成：
-
-   ```bash
-   git pull && ./scripts/deploy.sh && sudo nginx -t && sudo systemctl reload nginx
-   ```
-
-   `git pull` 会删掉仓库根目录的旧页面，所以从拉取到 reload 之间网站会有一两分钟打不开。切换之后 nginx 只对外提供 `dist/`，仓库里的 `.git/`、`src/`、`node_modules/` 也不会再被公开访问。
-
-也可以不在服务器上装 Node：本地 `npm run build`，再把 `dist/` 上传到服务器的同一位置（在 VS Code 的远程资源管理器里直接拖进去即可）。
-
-所有旧链接（`/about.html`、`/projects/code/StableShape.html` …）在新站里保持不变。
+所有旧链接（`/about.html`、`/projects/code/StableShape.html` …）都保持可用，React 版用过的 `/projects/code/stable-shape` 这类地址会 301 跳到对应页面。

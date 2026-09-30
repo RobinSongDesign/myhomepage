@@ -24,12 +24,13 @@ src/
     about.ts         经历、教育、工具、荣誉
     image-sizes.json 图床图片的宽高（防止加载时页面跳动）
     imgdb.ts         图床 URL 工具函数
+    logo-geometry.ts logo 里静态的部分：星球笔触（也是字母 R）和签名 S，从 logo.svg 提取
   layouts/
     BaseLayout.astro     <head>、主题、页眉页脚、机器人
     ProjectLayout.astro  项目页模板：标题 + 图签信息栏 + 封面 + 正文 + 翻页
   components/
     content/         项目页积木：Section / Figure / Figures / Steps / Stats / Cards / Card / Embed / Timeline / BeforeAfter
-    FieldCanvas.astro    首页和 404 的实时矢量场
+    AsciiLogo.astro      首页和 404 的 ASCII logo：文字环绕着星球实时旋转
     Chatbot.astro        AI 助手（marked + DOMPurify 首次打开时才加载）
     …
   scripts/

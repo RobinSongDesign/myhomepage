@@ -1,15 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import FieldCanvas from '../components/FieldCanvas.astro';
+import AsciiLogo from '../components/AsciiLogo.astro';
 import Icon from '../components/Icon.astro';
 ---
 
 <BaseLayout title="Page not found" description="The page you were looking for doesn’t exist.">
-  <section class="lost">
-    <FieldCanvas class="lost-field" spacing={30} />
-    <div class="wrap lost-inner">
+  <section class="lost wrap">
+    <div class="lost-canvas"><AsciiLogo class="lost-logo" /></div>
+    <div class="lost-text">
       <p class="label">Error 404</p>
-      <h1 class="code">Off the grid.</h1>
+      <h1 class="code">Lost in orbit.</h1>
       <p class="lede">This page doesn’t exist — it may have moved when the site was rebuilt.</p>
       <div class="actions">
         <a class="btn" href="/">Home <Icon name="arrow-right" /></a>
@@ -21,25 +21,32 @@ import Icon from '../components/Icon.astro';
 
 <style>
   .lost {
-    position: relative;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: 1fr auto;
+    column-gap: var(--col-gap);
     min-height: calc(100svh - var(--header-h));
-    overflow: hidden;
+    padding-bottom: var(--space-16);
   }
 
-  .lost :global(.lost-field) {
+  .lost-canvas {
+    position: relative;
+    grid-column: 1 / -1;
+    min-height: clamp(16rem, 42svh, 28rem);
+    margin-inline: calc(-1 * var(--gutter));
+    touch-action: pan-y;
+  }
+
+  .lost-canvas :global(.lost-logo) {
     position: absolute;
     inset: 0;
-    -webkit-mask-image: radial-gradient(circle at 70% 40%, #000 20%, transparent 75%);
-    mask-image: radial-gradient(circle at 70% 40%, #000 20%, transparent 75%);
   }
 
-  .lost-inner {
-    position: relative;
+  .lost-text {
+    grid-column: 1 / -1;
     display: grid;
     align-content: end;
     gap: var(--space-6);
-    padding-block: var(--space-16);
   }
 
   .code {
@@ -57,5 +64,22 @@ import Icon from '../components/Icon.astro';
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
+  }
+
+  @media (min-width: 64rem) {
+    .lost {
+      grid-template-rows: 1fr;
+    }
+
+    .lost-canvas {
+      grid-column: 6 / -1;
+      grid-row: 1;
+      margin: 0 calc(-1 * var(--gutter)) 0 0;
+    }
+
+    .lost-text {
+      grid-column: 1 / span 5;
+      grid-row: 1;
+    }
   }
 </style>

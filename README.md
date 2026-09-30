@@ -86,6 +86,11 @@ cd /www/wwwroot/robinsong.top && ./scripts/deploy.sh
    index index.html;
    error_page 404 /404.html;
 
+   # 多页静态站：先找文件，再找同名 .html（/about 也能打开 about.html），都没有就返回 404 页
+   location / {
+       try_files $uri $uri.html $uri/ =404;
+   }
+
    # 证书续期的验证文件写在仓库根目录，不在 dist/ 里（已有同类 location 就保留原来的）
    location ^~ /.well-known/acme-challenge/ {
        root /www/wwwroot/robinsong.top;
@@ -96,6 +101,8 @@ cd /www/wwwroot/robinsong.top && ./scripts/deploy.sh
        expires 1y;
    }
    ```
+
+   如果原来有单页应用那种 `try_files … /index.html` 的写法，要换成上面的 `location /`，否则所有不存在的地址都会返回首页。
 
 3. **拉取、构建、生效**，一条命令完成：
 

@@ -1,0 +1,412 @@
+---
+/**
+ * The logo as live ASCII art. The planet (a brush stroke that is also the R)
+ * and the S signature come from the original drawing; the ROBIN-SONG-DESIGN
+ * ring is modelled as letters on a tilted 3D band that spins around the planet.
+ * Each frame is drawn to a tiny offscreen canvas — back letters, planet and
+ * front letters in separate colour channels — and re-typed as characters.
+ * Drag horizontally to spin it.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<canvas class:list={['ascii-logo', className]} data-ascii-logo aria-hidden="true"></canvas>
+
+<script>
+  import { logoStrokes } from '../data/logo-geometry';
+
+  const RING_TEXT = 'ROBIN-SONG-DESIGN-ROBIN-SONG-DESIGN-';
+  const RAMP = ' .:-=+*#%@';
+  const STARS = '.·+*';
+  const SANS = '"Geist Variable", ui-sans-serif, system-ui, sans-serif';
+  const MONO = '"Geist Mono Variable", ui-monospace, Menlo, monospace';
+
+  /** Part of the drawing (SVG units) that must stay in view, spinning ring included. */
+  const CONTENT = { x: 60, y: 92, w: 672, h: 526 };
+  /**
+   * The ring fitted to the drawing: centre, radius, in-plane tilt, view elevation and
+   * camera distance. Letters are condensed (as in the drawing) so they can be tall
+   * enough to read in type yet still leave a gap between neighbours.
+   */
+  const RING = { cx: 395, cy: 372, r: 312, tilt: -0.17, elevation: 0.27, camera: 1300, font: 104, condense: 0.72, tracking: 0 };
+  const SPIN = -0.2; // rad/s; front letters drift left, so the words arrive readable
+  const SS = 2; // subsamples per character cell, per axis
+
+  type Layer = 0 | 1 | 2 | 3; // front, planet, back, star
+
+  const cssVar = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  class AsciiLogo {
+    canvas: HTMLCanvasElement;
+    host: HTMLElement;
+    ctx: CanvasRenderingContext2D;
+    off = document.createElement('canvas');
+    octx = this.off.getContext('2d', { willReadFrequently: true })!;
+    strokes = logoStrokes.map((s) => ({ ...s, path: new Path2D(s.d) }));
+    glyphs: { ch: string; phi: number }[] = [];
+    /** Where each letter landed this frame, in cell units — so cells can be typed with that letter. */
+    marks: { x: number; y: number; ch: string; front: boolean }[] = [];
+
+    width = 0;
+    height = 0;
+    dpr = 1;
+    fontPx = 10;
+    cellW = 6;
+    cellH = 11.5;
+    cols = 0;
+    rows = 0;
+    scale = 1;
+    box = { x: 0, y: 0, w: 0, h: 0 };
+    base = new DOMMatrix();
+    stars = new Float32Array(0);
+    colors: string[] = [];
+
+    theta = 0;
+    omega = SPIN;
+    dragging = false;
+    dragX = 0;
+    dragT = 0;
+
+    running = false;
+    visible = true;
+    raf = 0;
+    lastTick = 0;
+    lastDraw = 0;
+    reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    constructor(canvas: HTMLCanvasElement) {
+      this.canvas = canvas;
+      this.host = canvas.parentElement ?? canvas;
+      this.ctx = canvas.getContext('2d')!;
+      this.readTheme();
+      this.layoutRing();
+      this.resize();
+      this.bind();
+      this.draw(performance.now());
+      if (!this.reduced) this.play();
+    }
+
+    readTheme() {
+      // front letters, planet, back letters, stars
+      this.colors = [cssVar('--accent'), cssVar('--ink'), cssVar('--ink-2'), cssVar('--ink-3')];
+    }
+
+    /** Space the letters around the ring by their real widths. */
+    layoutRing() {
+      const o = this.octx;
+      o.font = `800 ${RING.font}px ${SANS}`;
+      const chars = [...RING_TEXT];
+      const widths = chars.map((ch) => o.measureText(ch).width * RING.condense + RING.tracking);
+      const total = widths.reduce((sum, w) => sum + w, 0);
+      let acc = 0;
+      this.glyphs = chars.map((ch, i) => {
+        const phi = ((acc + widths[i] / 2) / total) * Math.PI * 2;
+        acc += widths[i];
+        return { ch, phi };
+      });
+      // Start as drawn: "ROBIN-SONG" facing us.
+      this.theta = -(this.glyphs[0].phi + this.glyphs[9].phi) / 2;
+    }
+
+    resize() {
+      const rect = this.canvas.getBoundingClientRect();
+      this.width = rect.width;
+      this.height = rect.height;
+      this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+      this.canvas.width = Math.round(this.width * this.dpr);
+      this.canvas.height = Math.round(this.height * this.dpr);
+
+      // Smaller cells on small screens keep the ring's letters several rows tall.
+      this.fontPx = this.width >= 560 ? 9 : 7;
+      this.ctx.font = `${this.fontPx}px ${MONO}`;
+      this.cellW = this.ctx.measureText('M').width || this.fontPx * 0.6;
+      this.cellH = Math.round(this.fontPx * 1.15 * 10) / 10;
+      this.cols = Math.ceil(this.width / this.cellW);
+      this.rows = Math.ceil(this.height / this.cellH);
+      this.off.width = this.cols * SS;
+      this.off.height = this.rows * SS;
+
+      // The canvas is laid out by CSS; the logo simply fills it, centred.
+      const padX = this.width * 0.06;
+      const padY = this.height * 0.03;
+      this.box = { x: padX, y: padY, w: this.width - 2 * padX, h: this.height - 2 * padY };
+      this.scale = Math.min(this.box.w / CONTENT.w, this.box.h / CONTENT.h);
+      const fitX = this.box.x + (this.box.w - CONTENT.w * this.scale) / 2;
+      const fitY = this.box.y + (this.box.h - CONTENT.h * this.scale) / 2;
+      this.base = new DOMMatrix()
+        .scale(SS / this.cellW, SS / this.cellH)
+        .translate(fitX - CONTENT.x * this.scale, fitY - CONTENT.y * this.scale)
+        .scale(this.scale);
+
+      // A sparse field of stars with random twinkle phases (-1 = empty sky),
+      // thinning out toward the edges so the canvas has no hard border.
+      this.stars = new Float32Array(this.cols * this.rows);
+      for (let row = 0; row < this.rows; row++) {
+        for (let col = 0; col < this.cols; col++) {
+          const dx = (col / this.cols - 0.5) * 2;
+          const dy = (row / this.rows - 0.5) * 2;
+          const edge = Math.min(1, Math.hypot(dx, dy) / 1.25);
+          const p = 0.016 * (1 - edge * edge);
+          this.stars[row * this.cols + col] = Math.random() < p ? Math.random() : -1;
+        }
+      }
+    }
+
+    bind() {
+      new ResizeObserver(() => {
+        this.resize();
+        this.draw(performance.now());
+      }).observe(this.canvas);
+
+      new MutationObserver(() => {
+        this.readTheme();
+        this.draw(performance.now());
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+      new IntersectionObserver(([entry]) => {
+        this.visible = entry.isIntersecting;
+        this.visible && !this.reduced ? this.play() : this.pause();
+      }).observe(this.canvas);
+
+      document.addEventListener('visibilitychange', () => {
+        document.hidden || this.reduced ? this.pause() : this.visible && this.play();
+      });
+
+      if (this.reduced) return;
+
+      // Drag to spin. Listen on the host so text layered above the canvas doesn't block it.
+      const inLogo = (e: PointerEvent) => {
+        const r = this.canvas.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        const b = this.box;
+        return x > b.x && x < b.x + b.w && y > b.y && y < b.y + b.h;
+      };
+      this.host.addEventListener('pointerdown', (e) => {
+        if ((e.target as Element).closest('a, button, input') || !inLogo(e)) return;
+        this.dragging = true;
+        this.dragX = e.clientX;
+        this.dragT = performance.now();
+        this.host.style.cursor = 'grabbing';
+        e.preventDefault();
+        try {
+          this.host.setPointerCapture(e.pointerId);
+        } catch {
+          // Not a live pointer (e.g. a synthetic event); dragging still works without capture.
+        }
+      });
+      this.host.addEventListener('pointermove', (e) => {
+        if (!this.dragging) {
+          if (e.pointerType === 'mouse') this.host.style.cursor = inLogo(e) ? 'grab' : '';
+          return;
+        }
+        const now = performance.now();
+        const delta = (e.clientX - this.dragX) / (RING.r * this.scale * 1.2);
+        this.theta += delta;
+        this.omega = delta / Math.max((now - this.dragT) / 1000, 0.008);
+        this.dragX = e.clientX;
+        this.dragT = now;
+      });
+      const release = () => {
+        this.dragging = false;
+        this.host.style.cursor = '';
+      };
+      this.host.addEventListener('pointerup', release);
+      this.host.addEventListener('pointercancel', release);
+    }
+
+    play() {
+      if (this.running) return;
+      this.running = true;
+      this.lastTick = performance.now();
+      const tick = (now: number) => {
+        if (!this.running) return;
+        const dt = Math.min((now - this.lastTick) / 1000, 0.05);
+        this.lastTick = now;
+        if (!this.dragging) {
+          // Ease any flick back to the resting spin.
+          this.omega += (SPIN - this.omega) * Math.min(1, dt * 1.2);
+          this.theta += this.omega * dt;
+        }
+        // ~30 fps is plenty for type, and half the work.
+        if (now - this.lastDraw >= 32) {
+          this.lastDraw = now;
+          this.draw(now);
+        }
+        this.raf = requestAnimationFrame(tick);
+      };
+      this.raf = requestAnimationFrame(tick);
+    }
+
+    pause() {
+      this.running = false;
+      cancelAnimationFrame(this.raf);
+    }
+
+    /** Paint back letters (red), planet (green) and front letters (blue) offscreen. */
+    rasterize() {
+      const o = this.octx;
+      o.setTransform(1, 0, 0, 1, 0, 0);
+      // Opaque black first: with 'lighter' on top, each channel then reads back as
+      // plain coverage (a transparent canvas would come back un-premultiplied).
+      o.globalCompositeOperation = 'source-over';
+      o.fillStyle = '#000';
+      o.fillRect(0, 0, this.off.width, this.off.height);
+      o.globalCompositeOperation = 'lighter';
+      o.font = `800 ${RING.font}px ${SANS}`;
+      o.textAlign = 'center';
+      o.textBaseline = 'middle';
+
+      const { r, elevation: e, camera, tilt, cx, cy, condense } = RING;
+      const ct = Math.cos(tilt);
+      const st = Math.sin(tilt);
+      const se = Math.sin(e);
+      const ce = Math.cos(e);
+      const b = this.base;
+      this.marks.length = 0;
+
+      const letters = (front: boolean) => {
+        for (const g of this.glyphs) {
+          const phi = g.phi + this.theta;
+          const cos = Math.cos(phi);
+          if (cos >= 0 !== front) continue;
+          const sin = Math.sin(phi);
+          const depth = r * cos * ce;
+          const s = camera / (camera - depth);
+          const X = r * sin * s;
+          const Y = r * cos * se * s;
+          const px = cx + X * ct - Y * st;
+          const py = cy + X * st + Y * ct;
+          // Tangent and "down" of the letter on screen; a letter on the far side
+          // has its tangent reversed, so it reads mirrored — as in the drawing.
+          const tx = cos * s * condense;
+          const ty = -sin * se * s * condense;
+          const dy = ce * s;
+          o.setTransform(b);
+          o.transform(tx * ct - ty * st, tx * st + ty * ct, -dy * st, dy * ct, px, py);
+          const alpha = (0.4 + 0.6 * Math.abs(cos)) * (front ? 1 : 0.85);
+          o.fillStyle = front ? `rgba(0,0,255,${alpha})` : `rgba(255,0,0,${alpha})`;
+          o.fillText(g.ch, 0, 0);
+          this.marks.push({ x: (b.a * px + b.c * py + b.e) / SS, y: (b.b * px + b.d * py + b.f) / SS, ch: g.ch, front });
+        }
+      };
+
+      letters(false);
+      o.setTransform(this.base);
+      o.fillStyle = 'rgb(0,255,0)';
+      for (const s of this.strokes) {
+        o.save();
+        o.translate(s.x, s.y);
+        o.fill(s.path);
+        o.restore();
+      }
+      letters(true);
+    }
+
+    /** The letter whose centre is nearest to a cell, on the same side of the ring. */
+    letterAt(x: number, y: number, front: boolean) {
+      let best = '#';
+      let bestDist = Infinity;
+      for (const m of this.marks) {
+        if (m.front !== front) continue;
+        const dx = (m.x - x) * this.cellW;
+        const dy = (m.y - y) * this.cellH;
+        const dist = dx * dx + dy * dy;
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = m.ch;
+        }
+      }
+      return best;
+    }
+
+    draw(now: number) {
+      if (!this.cols || !this.rows) return;
+      this.rasterize();
+      const data = this.octx.getImageData(0, 0, this.off.width, this.off.height).data;
+      const ow = this.off.width;
+      const norm = 255 * SS * SS;
+      const lines: string[][] = [[], [], [], []];
+      const used = [false, false, false, false];
+
+      const c = this.ctx;
+      c.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+      c.clearRect(0, 0, this.width, this.height);
+      c.font = `${this.fontPx}px ${MONO}`;
+      c.textBaseline = 'top';
+
+      for (let row = 0; row < this.rows; row++) {
+        for (let l = 0; l < 4; l++) {
+          lines[l].length = 0;
+          used[l] = false;
+        }
+        for (let col = 0; col < this.cols; col++) {
+          let back = 0;
+          let planet = 0;
+          let front = 0;
+          for (let sy = 0; sy < SS; sy++) {
+            let i = ((row * SS + sy) * ow + col * SS) * 4;
+            for (let sx = 0; sx < SS; sx++, i += 4) {
+              back += data[i];
+              planet += data[i + 1];
+              front += data[i + 2];
+            }
+          }
+          back /= norm;
+          planet /= norm;
+          front /= norm;
+
+          const density = Math.max(front, planet, back * 0.9);
+          let layer: Layer = 3;
+          let ch = ' ';
+          if (density > 0.06) {
+            layer = front > 0.12 ? 0 : planet > 0.12 ? 1 : 2;
+            if (layer === 1) {
+              ch = RAMP[Math.min(RAMP.length - 1, 1 + Math.floor(density * (RAMP.length - 1)))];
+            } else {
+              // The ring is typed with its own letters; edges soften to dots.
+              const cover = layer === 0 ? front : back;
+              ch = cover > 0.42 ? this.letterAt(col + 0.5, row + 0.5, layer === 0) : cover > 0.2 ? ':' : '.';
+            }
+          } else {
+            const star = this.stars[row * this.cols + col];
+            if (star >= 0) {
+              const twinkle = this.reduced ? star : (Math.sin(now / 700 + star * 40) + 1) / 2;
+              ch = STARS[Math.min(STARS.length - 1, Math.floor(twinkle * STARS.length))];
+            }
+          }
+          for (let l = 0; l < 4; l++) lines[l].push(l === layer ? ch : ' ');
+          if (ch !== ' ') used[layer] = true;
+        }
+        const y = row * this.cellH;
+        for (let l = 0; l < 4; l++) {
+          if (!used[l]) continue;
+          c.globalAlpha = l === 3 ? 0.55 : 1;
+          c.fillStyle = this.colors[l];
+          c.fillText(lines[l].join(''), 0, y);
+        }
+      }
+      c.globalAlpha = 1;
+    }
+  }
+
+  const start = () =>
+    document.querySelectorAll<HTMLCanvasElement>('[data-ascii-logo]').forEach((canvas) => new AsciiLogo(canvas));
+
+  // Measure with the real fonts, not the fallbacks.
+  Promise.all([document.fonts.load(`10px ${MONO}`), document.fonts.load(`800 ${RING.font}px ${SANS}`)])
+    .catch(() => {})
+    .then(start);
+</script>
+
+<style>
+  .ascii-logo {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>

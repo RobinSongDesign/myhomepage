@@ -1,5 +1,6 @@
-# build output
+# build output (deploy.sh builds into .dist-next and keeps .dist-prev for rollback)
 dist/
+.dist-*/
 .astro/
 
 # dependencies

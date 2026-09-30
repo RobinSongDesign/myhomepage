@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import FieldCanvas from '../components/FieldCanvas.astro';
+import AsciiLogo from '../components/AsciiLogo.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
@@ -15,10 +15,11 @@ const facts = [
 
 <BaseLayout>
   <section class="hero" aria-labelledby="hero-name">
-    <FieldCanvas class="hero-field" />
-
     <div class="wrap hero-grid">
-      <p class="label hero-caption">Fig. 00 — Vector field, live.<span class="pointer-hint"> Move your cursor.</span></p>
+      <figure class="hero-figure">
+        <div class="hero-canvas"><AsciiLogo class="hero-logo" /></div>
+        <figcaption class="label hero-caption">Fig. 00 — ROBIN-SONG-DESIGN, in orbit. Drag to spin.</figcaption>
+      </figure>
 
       <h1 class="hero-name" id="hero-name">Robin<br />Song</h1>
 
@@ -91,46 +92,50 @@ const facts = [
 <style>
   /* Hero -------------------------------------------------------------------- */
   .hero {
-    position: relative;
     display: flex;
     min-height: min(calc(100svh - var(--header-h)), 60rem);
     border-bottom: 1px solid var(--rule);
     overflow: hidden;
   }
 
-  .hero :global(.hero-field) {
-    position: absolute;
-    inset: 0;
-    -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 96%);
-    mask-image: linear-gradient(to bottom, #000 45%, transparent 96%);
-  }
-
   .hero-grid {
-    position: relative;
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    grid-template-rows: auto 1fr auto auto auto;
+    grid-template-rows: 1fr auto auto auto;
     column-gap: var(--col-gap);
-    padding-block: var(--space-6) var(--space-8);
+    padding-block: var(--space-2) var(--space-8);
+  }
+
+  /* The logo, typed out in characters. Bleeds to the screen edge. */
+  .hero-figure {
+    position: relative;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0 calc(-1 * var(--gutter)) var(--space-6);
+  }
+
+  .hero-canvas {
+    position: relative;
+    flex: 1;
+    min-height: clamp(17rem, 46svh, 30rem);
+    /* Horizontal drags spin the logo; vertical swipes still scroll the page. */
+    touch-action: pan-y;
+  }
+
+  .hero-canvas :global(.hero-logo) {
+    position: absolute;
+    inset: 0;
   }
 
   .hero-caption {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    justify-self: end;
-    padding: 0.2em 0.5em;
-    background: var(--paper);
-  }
-
-  @media (hover: none) {
-    .pointer-hint {
-      display: none;
-    }
+    padding-inline: var(--gutter);
   }
 
   .hero-name {
     grid-column: 1 / -1;
-    grid-row: 3;
+    grid-row: 2;
     align-self: end;
     margin-bottom: var(--space-8);
     font-size: var(--text-display);
@@ -141,7 +146,7 @@ const facts = [
 
   .hero-side {
     grid-column: 1 / -1;
-    grid-row: 4;
+    grid-row: 3;
     display: grid;
     gap: var(--space-6);
     margin-bottom: var(--space-10);
@@ -159,7 +164,7 @@ const facts = [
 
   .hero-facts {
     grid-column: 1 / -1;
-    grid-row: 5;
+    grid-row: 4;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     column-gap: var(--col-gap);
@@ -176,35 +181,38 @@ const facts = [
     font-size: var(--text-sm);
   }
 
+  /* Wide screens: name and intro on the left, the logo beside them. */
   @media (min-width: 64rem) {
+    .hero-figure {
+      grid-column: 6 / -1;
+      grid-row: 1 / 4;
+      margin: 0 calc(-1 * var(--gutter)) var(--space-6) 0;
+    }
+
+    .hero-canvas {
+      min-height: 28rem;
+    }
+
+    /* Sits in the empty top-right corner of the drawing. */
+    .hero-caption {
+      position: absolute;
+      top: var(--space-3);
+      right: 0;
+      pointer-events: none;
+    }
+
     .hero-name {
-      grid-column: 1 / span 8;
-      grid-row: 3 / span 2;
-      margin-bottom: var(--space-10);
+      grid-column: 1 / span 5;
     }
 
     .hero-side {
-      grid-column: 9 / -1;
-      grid-row: 4;
-      align-self: end;
+      grid-column: 1 / span 5;
     }
   }
 
   @media (max-width: 47.99rem) {
     .hero {
       min-height: 0;
-    }
-
-    .hero-grid {
-      padding-top: 38svh;
-    }
-
-    .hero-caption {
-      /* Clearing the grid placement makes the padding box, not row 1, the containing block. */
-      grid-area: auto;
-      position: absolute;
-      top: var(--space-4);
-      right: var(--gutter);
     }
 
     .hero-facts {

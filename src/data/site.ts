@@ -14,7 +14,8 @@ export const site = {
     github: 'https://github.com/RobinSongDesign',
   },
   chat: {
-    endpoint: 'https://bot.robinsong.top/api/chat',
-    knowledgeBase: '/files/botdata.json',
+    // Same-origin; nginx proxies /api/ to portfolio-chat.service on the server, which
+    // holds the API key and builds the system prompt from public/files/botdata.json.
+    endpoint: '/api/chat',
   },
 } as const;

@@ -60,17 +60,14 @@ const suggestions = ['What is StableShape?', 'Tell me about your background', 'ä
   const chips = root.querySelector<HTMLElement>('[data-chat-chips]');
   const handle = root.querySelector<HTMLElement>('[data-chat-resize]')!;
 
-  let engine: Engine | null = null;
-  let history: Message[] | null = null;
+  /** The visible conversation; the server adds the system prompt itself. */
+  const history: Message[] = [];
   let busy = false;
 
-  /** Loads the engine and knowledge base once; safe to call repeatedly, retried after a failure. */
-  let ready: Promise<void> | null = null;
+  /** Loads the engine once; safe to call repeatedly, retried after a failure. */
+  let ready: Promise<Engine> | null = null;
   const prepare = () =>
-    (ready ??= (async () => {
-      engine = await import('../scripts/chat-engine');
-      history = [{ role: 'system', content: await engine.buildSystemPrompt(site.chat.knowledgeBase) }];
-    })().catch((error) => {
+    (ready ??= import('../scripts/chat-engine').catch((error) => {
       ready = null;
       throw error;
     }));
@@ -122,16 +119,18 @@ const suggestions = ['What is StableShape?', 'Tell me about your background', 'ä
     const pending = addMessage('ai', '');
     pending.classList.add('is-typing');
 
+    const turn: Message = { role: 'user', content: text };
     try {
-      await prepare();
-      history!.push({ role: 'user', content: text });
-      const reply = await engine!.ask(site.chat.endpoint, history!);
-      history!.push({ role: 'assistant', content: reply });
-      pending.querySelector('.msg-body')!.innerHTML = engine!.renderMarkdown(reply);
+      const engine = await prepare();
+      const reply = await engine.ask(site.chat.endpoint, [...history, turn]);
+      history.push(turn, { role: 'assistant', content: reply });
+      pending.querySelector('.msg-body')!.innerHTML = engine.renderMarkdown(reply);
     } catch (error) {
       console.error(error);
-      history?.pop();
-      pending.querySelector('.msg-body')!.textContent = 'Sorry, I canâ€™t reach the server right now. Please try again in a moment.';
+      const tooFast = (error as { status?: number }).status === 429;
+      pending.querySelector('.msg-body')!.textContent = tooFast
+        ? 'Youâ€™re sending messages a little fast. Give it a minute and try again.'
+        : 'Sorry, I canâ€™t reach the server right now. Please try again in a moment.';
     } finally {
       pending.classList.remove('is-typing');
       log.scrollTop = log.scrollHeight;

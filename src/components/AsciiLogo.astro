@@ -37,6 +37,8 @@ const { class: className } = Astro.props;
   const SS = 2; // subsamples per character cell, per axis
 
   type Layer = 0 | 1 | 2 | 3; // front, planet, back, star
+  /** Opacity per layer: the far side of the ring and the stars recede. */
+  const LAYER_ALPHA = [1, 1, 0.5, 0.55];
 
   const cssVar = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
@@ -91,8 +93,9 @@ const { class: className } = Astro.props;
     }
 
     readTheme() {
-      // front letters, planet, back letters, stars
-      this.colors = [cssVar('--accent'), cssVar('--ink'), cssVar('--ink-2'), cssVar('--ink-3')];
+      // front letters, planet, back letters, stars. The whole ring is orange — bright in
+      // front, dimmed behind — so it never blends into the planet's ink.
+      this.colors = [cssVar('--accent'), cssVar('--ink'), cssVar('--accent'), cssVar('--ink-3')];
     }
 
     /** Space the letters around the ring by their real widths. */
@@ -332,6 +335,9 @@ const { class: className } = Astro.props;
       const norm = 255 * SS * SS;
       const lines: string[][] = [[], [], [], []];
       const used = [false, false, false, false];
+      const rowBack = new Float32Array(this.cols);
+      const rowPlanet = new Float32Array(this.cols);
+      const rowFront = new Float32Array(this.cols);
 
       const c = this.ctx;
       c.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
@@ -344,6 +350,7 @@ const { class: className } = Astro.props;
           lines[l].length = 0;
           used[l] = false;
         }
+        // Coverage of each layer per cell in this row.
         for (let col = 0; col < this.cols; col++) {
           let back = 0;
           let planet = 0;
@@ -356,23 +363,40 @@ const { class: className } = Astro.props;
               front += data[i + 2];
             }
           }
-          back /= norm;
-          planet /= norm;
-          front /= norm;
+          rowBack[col] = back / norm;
+          rowPlanet[col] = planet / norm;
+          rowFront[col] = front / norm;
+        }
 
-          const density = Math.max(front, planet, back * 0.9);
-          let layer: Layer = 3;
+        for (let col = 0; col < this.cols; col++) {
+          const back = rowBack[col];
+          const planet = rowPlanet[col];
+          const front = rowFront[col];
+
+          // What is actually visible in this cell, front to back: front letters hide the
+          // planet, and the planet hides the letters behind it. Front letters also keep a
+          // one-cell margin either side, so the planet showing between them stays faint.
+          const beside = Math.max(col > 0 ? rowFront[col - 1] : 0, col < this.cols - 1 ? rowFront[col + 1] : 0);
+          const halo = Math.max(front, 0.8 * beside);
+          const visFront = front;
+          const visPlanet = planet * (1 - halo);
+          const visBack = back * (1 - planet) * (1 - halo);
+
+          // One character per cell, so the largest visible layer wins — except that a
+          // front letter wins once it covers a third of the cell, to keep the words legible.
+          let layer: Layer =
+            visFront >= 0.35 || (visFront >= visPlanet && visFront >= visBack) ? 0 : visPlanet >= visBack ? 1 : 2;
+          const cover = layer === 0 ? visFront : layer === 1 ? visPlanet : visBack;
           let ch = ' ';
-          if (density > 0.06) {
-            layer = front > 0.12 ? 0 : planet > 0.12 ? 1 : 2;
+          if (cover > 0.06) {
             if (layer === 1) {
-              ch = RAMP[Math.min(RAMP.length - 1, 1 + Math.floor(density * (RAMP.length - 1)))];
+              ch = RAMP[Math.min(RAMP.length - 1, 1 + Math.floor(cover * (RAMP.length - 1)))];
             } else {
               // The ring is typed with its own letters; edges soften to dots.
-              const cover = layer === 0 ? front : back;
               ch = cover > 0.42 ? this.letterAt(col + 0.5, row + 0.5, layer === 0) : cover > 0.2 ? ':' : '.';
             }
           } else {
+            layer = 3;
             const star = this.stars[row * this.cols + col];
             if (star >= 0) {
               const twinkle = this.reduced ? star : (Math.sin(now / 700 + star * 40) + 1) / 2;
@@ -385,7 +409,7 @@ const { class: className } = Astro.props;
         const y = row * this.cellH;
         for (let l = 0; l < 4; l++) {
           if (!used[l]) continue;
-          c.globalAlpha = l === 3 ? 0.55 : 1;
+          c.globalAlpha = LAYER_ALPHA[l];
           c.fillStyle = this.colors[l];
           c.fillText(lines[l].join(''), 0, y);
         }

@@ -21,10 +21,12 @@ const facts = [
         <figcaption class="label hero-caption">Fig. 00 — ROBIN-SONG-DESIGN, in orbit. Drag to spin.</figcaption>
       </figure>
 
-      <h1 class="hero-name" id="hero-name">Robin<br />Song</h1>
+      <h1 class="hero-name" id="hero-name" data-ascii="art">
+        <span data-ascii-alt="Qizhen">Robin</span><br />Song
+      </h1>
 
       <div class="hero-side">
-        <p class="lede">
+        <p class="lede" data-ascii="type">
           Computational designer &amp; developer working where architecture meets code — fluid simulation, machine
           learning and form-finding for design.
         </p>
@@ -89,6 +91,10 @@ const facts = [
   </section>
 </BaseLayout>
 
+<script>
+  import '../scripts/ascii-text';
+</script>
+
 <style>
   /* Hero -------------------------------------------------------------------- */
   .hero {
@@ -134,11 +140,13 @@ const facts = [
   }
 
   .hero-name {
+    position: relative;
     grid-column: 1 / -1;
     grid-row: 2;
     align-self: end;
     margin-bottom: var(--space-8);
-    font-size: var(--text-display);
+    /* Typed in characters, the name needs more height on phones to stay legible. */
+    font-size: max(var(--text-display), 6rem);
     font-weight: 500;
     line-height: 0.84;
     letter-spacing: var(--tracking-display);
@@ -153,7 +161,47 @@ const facts = [
   }
 
   .hero-side .lede {
-    max-width: 30ch;
+    position: relative;
+    max-width: 40ch;
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  /*
+   * The name and the intro are re-typed as ASCII by src/scripts/ascii-text.ts.
+   * Their real text stays in place, transparent, for layout, selection and
+   * screen readers. The name dissolves in from nothing — unless the script
+   * never arrives, in which case the plain text shows after a moment.
+   */
+  :global(.js) .hero-name {
+    color: transparent;
+    animation: show-text 0s 2s forwards;
+  }
+
+  .hero-name.is-ascii,
+  .lede.is-ascii {
+    color: transparent;
+    animation: none;
+  }
+
+  .is-ascii::selection,
+  .is-ascii *::selection {
+    color: transparent;
+  }
+
+  /* High-contrast modes force the text visible again; drop the drawing instead. */
+  @media (forced-colors: active) {
+    .is-ascii :global(canvas) {
+      display: none;
+    }
+  }
+
+  @keyframes show-text {
+    to {
+      color: var(--ink);
+    }
   }
 
   .hero-actions {
